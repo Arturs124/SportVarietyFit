@@ -1,5 +1,5 @@
 new Swiper('.card-wrapper', {
-    direction: 'horizontal', // changed from 'vertical'
+    direction: 'horizontal',
     loop: true,
     spaceBetween: 30,
 
@@ -14,7 +14,7 @@ new Swiper('.card-wrapper', {
         prevEl: '.swiper-button-prev',
     },
 
-    breakpoints: { // fixed typo from 'breakposition'
+    breakpoints: {
         0: {
             slidesPerView: 1,
         },
