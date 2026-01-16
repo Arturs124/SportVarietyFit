@@ -1,5 +1,5 @@
 let slideIndex = 0;
-let direction = 1; // 1 for forward, -1 for backward
+let direction = 1;
 
 function showSlides() {
     const slides = document.querySelectorAll('.slides img');
@@ -18,7 +18,6 @@ function autoSlide() {
     showSlides();
 }
 
-// Initialize slideshow
 document.addEventListener('DOMContentLoaded', () => {
     showSlides();
     setInterval(autoSlide, 7000);
