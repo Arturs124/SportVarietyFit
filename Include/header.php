@@ -9,14 +9,14 @@
 <body>
 <header>
     <div class="logo">
-        <a href="#"><img src="/SportVarietyFit/bildes/SportVarietyFitLogoWhite.png" alt="SportVariety Fit Logo"></a>
+        <a href="/SportVarietyFit/Index.php"><img src="/SportVarietyFit/bildes/SportVarietyFitLogoWhite.png" alt="SportVariety Fit Logo"></a>
     </div>
     <nav>
         <ul class="menu">
-            <li><a href="#">Home</a></li>
+            <li><a href="/SportVarietyFit/Index.php">Home</a></li>
             <li><a href="#">Challenges</a></li>
             <li><a href="#">Group Chats</a></li>
-            <li><a href="#">Contact</a></li>
+            <li><a href="/SportVarietyFit/Form/contact.php">Contact</a></li>
 
             <div class="profile">
                 <img src="/SportVarietyFit/bildes/profile.png" alt="Profile">
@@ -35,10 +35,10 @@
     <div class="hamburger" onclick="toggleMenu()">&#9776;</div>
     <div class="mobile-nav">
         <ul>
-            <li><a href="#">Home</a></li>
+            <li><a href="/SportVarietyFit/Index.php">Home</a></li>
             <li><a href="#">Challenges</a></li>
             <li><a href="#">Group Chats</a></li>
-            <li><a href="#">Contact</a></li>
+            <li><a href="/SportVarietyFit/Form/contact.php">Contact</a></li>
             <li class="mobile-profile">
                 <a href="#" onclick="toggleMobileProfileDropdown()">Profile</a>
                 <ul class="mobile-profile-dropdown">

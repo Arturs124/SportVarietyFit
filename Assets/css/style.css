@@ -1,0 +1,269 @@
+/* about us */
+.about-main {
+    max-width: 800px;
+    margin: 40px auto 40px auto;
+    padding: 32px 24px;
+    background: #fff;
+    border-radius: 16px;
+    box-shadow: 0 4px 24px #2b4cff11;
+}
+.about-title {
+    font-size: 2.1rem;
+    text-align: center;
+    margin-bottom: 18px;
+    color: #2b4cff;
+}
+.about-section-title {
+    font-size: 1.3rem;
+    color: #2b4cff;
+    margin-top: 28px;
+    margin-bottom: 10px;
+}
+.about-list {
+    margin-left: 18px;
+    margin-bottom: 18px;
+}
+.about-highlight {
+    background: #e3e8f0;
+    border-radius: 8px;
+    padding: 12px 18px;
+    margin: 18px 0;
+    font-size: 1.08em;
+}
+.about-us {
+    padding: 40px;
+    background-color: #f4f4f4;
+}
+
+.about-us h1 {
+    text-align: center;
+    font-size: 2.5rem;
+    margin-bottom: 20px;
+}
+
+.about-us-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    background-color: white;
+    padding: 30px;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.about-us h2 {
+    font-size: 2rem;
+    color: #333;
+    margin-top: 30px;
+}
+
+.about-us p {
+    font-size: 1rem;
+    line-height: 1.6;
+    color: #555;
+}
+
+.about-us ul {
+    margin: 20px 0;
+    padding-left: 20px;
+}
+
+.about-us ul li {
+    font-size: 1rem;
+    color: #333;
+    margin: 10px 0;
+}
+
+strong {
+    font-weight: bold;
+}
+
+/* privacy policy */
+.privacy-policy h2 {
+    font-size: 2rem;
+    color: #333;
+    margin-top: 30px;
+}
+
+.privacy-policy p {
+    font-size: 1rem;
+    line-height: 1.6;
+    color: #555;
+}
+
+.privacy-policy ul {
+    margin: 20px 0;
+    padding-left: 20px;
+}
+
+.privacy-policy ul li {
+    font-size: 1rem;
+    color: #333;
+    margin: 10px 0;
+}
+
+.privacy-policy-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    background-color: white;
+    padding: 30px;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+/* Terms of Service */
+.terms-of-service h2 {
+    font-size: 2rem;
+    color: #333;
+    margin-top: 30px;
+}
+
+.terms-of-service p {
+    font-size: 1rem;
+    line-height: 1.6;
+    color: #555;
+}
+
+.terms-of-service ul {
+    margin: 20px 0;
+    padding-left: 20px;
+}
+
+.terms-of-service ul li {
+    font-size: 1rem;
+    color: #333;
+    margin: 10px 0;
+}
+
+.terms-of-service-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    background-color: white;
+    padding: 30px;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+/* Kontaktu container */
+.form-container {
+    max-width: 600px;
+    margin: 50px auto;
+    background: #ffffff;
+    padding: 20px 30px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    border-radius: 10px;
+}
+
+.form-container h2 {
+    margin-bottom: 0px;
+    font-size: 30px;
+    font-weight: 700;
+    text-align: center;
+}
+
+/* Kontakti stils */
+form input,
+form textarea,
+form button {
+    width: 100%;
+    margin: 10px 0;
+    padding: 10px 15px;
+    font-size: 16px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    box-sizing: border-box;
+}
+
+form input:focus,
+form textarea:focus {
+    border-color: #a70000;
+    outline: none;
+    box-shadow: 0 0 5px rgba(185, 0, 0, 0.5);
+}
+
+form textarea {
+    resize: none;
+}
+
+form button {
+    background: #b30000;
+    color: #fff;
+    border: none;
+    cursor: pointer;
+    transition: background 0.3s ease;
+}
+
+form button:hover {
+    background: #850000;
+}
+
+/* Success and Error Messages */
+.success {
+    color: #28a745;
+    font-weight: bold;
+    text-align: center;
+}
+
+.error {
+    color: #dc3545;
+    font-weight: bold;
+    text-align: center;
+}
+
+/* Responsive Styles */
+@media screen and (max-width: 768px) {
+    .form-container {
+        padding: 15px;
+    }
+
+    form input,
+    form textarea,
+    form button {
+        font-size: 14px;
+    }
+}
+
+/* Kontaktu lapa */
+.contact-page-container {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    max-width: 1200px;
+    margin: 50px auto;
+    gap: 20px;
+    padding: 0 15px;
+}
+
+.form-container {
+    flex: 1 1 45%;
+    max-width: 45%;
+}
+
+.assistance-text {
+    flex: 1 1 45%;
+    max-width: 45%;
+    color: #000000;
+    font-size: 17px;
+    line-height: 1.6;
+}
+
+.assistance-text h2 {
+    font-size: 33px;
+    color: #000000;
+    margin-bottom: 15px;
+    font-weight: 700;
+}
+
+.assistance-text p {
+    margin-bottom: 15px;
+}
+
+@media screen and (max-width: 768px) {
+    .contact-page-container {
+        flex-direction: column;
+    }
+
+    .form-container, 
+    .assistance-text {
+        max-width: 100%;
+    }
+}

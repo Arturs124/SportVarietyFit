@@ -6,9 +6,9 @@
         <div style="min-width:180px;">
             <h3 style="color:#fff;font-size:1.50em;margin-bottom:10px;">Info</h3>
             <ul class="footer-links" style="display:flex;flex-direction:column;gap:8px;">
-                <li><a href="#">About Us</a></li>
-                <li><a href="#">Contact</a></li>
-                <li><a href="#">FAQ</a></li>
+                <li><a href="/SportVarietyFit/about.php">About Us</a></li>
+                <li><a href="/SportVarietyFit/Form/contact.php">Contact</a></li>
+                <li><a href="/SportVarietyFit/faq.php">FAQ</a></li>
                 <li><a href="#">Payment</a></li>
                 <li><a href="#">Subscription</a></li>
             </ul>
@@ -28,8 +28,8 @@
         <div style="min-width:180px;">
             <h3 style="color:#fff;font-size:1.50em;margin-bottom:10px;">Policies</h3>
             <ul class="footer-links" style="display:flex;flex-direction:column;gap:8px;">
-                <li><a href="#">Terms of Service</a></li>
-                <li><a href="#">Privacy Policy</a></li>
+                <li><a href="/SportVarietyFit/TermsOfService.php">Terms of Service</a></li>
+                <li><a href="/SportVarietyFit/PrivacyPolicy.php">Privacy Policy</a></li>
             </ul>
         </div>
         <!-- Social Media -->
