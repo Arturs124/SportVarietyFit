@@ -36,9 +36,9 @@
         <div style="min-width:180px;">
             <h3 style="color:#fff;font-size:1.50em;margin-bottom:10px;">Social Media</h3>
             <ul class="footer-links" style="display:flex;flex-direction:column;gap:8px;">
-                <li><a href="#" target="_blank"><img src="Bildes/Tiktok.png" alt="TikTok" style="width:24px;height:24px;"></a></li>
-                <li><a href="#" target="_blank"><img src="Bildes/Instagram.png" alt="Instagram" style="width:43px;height:24px;"></a></li>
-                <li><a href="#" target="_blank"><img src="Bildes/Youtube.png" alt="YouTube" style="width:35px;height:24px;"></a></li>
+                <li><a href="#" target="_blank"><img src="/SportVarietyFit/Bildes/Tiktok.png" alt="TikTok" style="width:24px;height:24px;"></a></li>
+                <li><a href="#" target="_blank"><img src="/SportVarietyFit/Bildes/Instagram.png" alt="Instagram" style="width:43px;height:24px;"></a></li>
+                <li><a href="#" target="_blank"><img src="/SportVarietyFit/Bildes/Youtube.png" alt="YouTube" style="width:35px;height:24px;"></a></li>
             </ul>
         </div>
     </div>

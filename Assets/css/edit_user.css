@@ -1,0 +1,91 @@
+.edit-user-container {
+    width: 50%;
+    margin: 30px auto;
+    padding: 20px;
+    background-color: #fff;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.edit-user-container h2 {
+    text-align: center;
+    font-size: 30px;
+    margin-bottom: 20px;
+    color: #333;
+}
+
+.edit-user-container form {
+    display: flex;
+    flex-direction: column;
+}
+
+.edit-user-container label {
+    font-size: 18px;
+    margin-bottom: 5px;
+    color: #333;
+}
+
+.edit-user-container input,
+.edit-user-container select {
+    padding: 10px;
+    font-size: 16px;
+    margin-bottom: 15px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    background-color: #f9f9f9;
+}
+
+.edit-user-container input[disabled],
+.edit-user-container select[disabled] {
+    background-color: #e9e9e9;
+}
+
+.edit-user-container button {
+    padding: 12px 20px;
+    font-size: 16px;
+    background-color: #960000;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.edit-user-container button:hover {
+    background-color: #6b0000;
+}
+
+.edit-user-container p {
+    text-align: center;
+    margin-top: 20px;
+}
+
+.edit-user-container a {
+    text-decoration: none;
+    color: #000000;
+    font-weight: bold;
+}
+
+.edit-user-container a:hover {
+    color: #000000;
+}
+
+@media (max-width: 768px) {
+    .edit-user-container {
+        width: 80%;
+    }
+
+    .edit-user-container h2 {
+        font-size: 25px;
+    }
+
+    .edit-user-container label,
+    .edit-user-container input,
+    .edit-user-container select {
+        font-size: 14px;
+    }
+
+    .edit-user-container button {
+        font-size: 14px;
+        padding: 10px 15px;
+    }
+}

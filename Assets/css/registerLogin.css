@@ -1,0 +1,92 @@
+.form-container {
+    max-width: 500px;
+    margin: 0 auto;
+    padding: 20px;
+    background-color: #f9f9f9;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.form-container h2 {
+    text-align: center;
+    font-size: 2em;
+    color: #333;
+}
+
+.form-container form {
+    display: flex;
+    flex-direction: column;
+    max-width: 95%;
+}
+
+.form-container input[type="text"],
+.form-container input[type="email"],
+.form-container input[type="password"],
+.form-container textarea {
+    padding: 10px;
+    margin: 10px 0;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    font-size: 1em;
+}
+
+.form-container button {
+    padding: 10px;
+    background-color: #a10000;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 1.2em;
+}
+
+.form-container button:hover {
+    background-color: #8a0000;
+}
+
+.form-container p {
+    text-align: center;
+    font-size: 1em;
+}
+
+.form-container .error,
+.form-container .success {
+    color: #d9534f;
+    font-size: 1em;
+    text-align: center;
+    margin: 10px 0;
+}
+
+.form-container .success {
+    color: #5bc0de;
+}
+
+.form-container a {
+    color: #007bff;
+    text-decoration: none;
+}
+
+.form-container a:hover {
+    text-decoration: underline;
+}
+
+@media (max-width: 768px) {
+    .form-container {
+        width: 90%;
+        padding: 15px;
+    }
+}
+
+@media (max-width: 480px) {
+    .form-container {
+        width: 100%;
+        padding: 10px;
+    }
+    .form-container h2 {
+        font-size: 1.8em;
+    }
+    .form-container input,
+    .form-container button {
+        font-size: 1em;
+    }
+}

@@ -22,11 +22,11 @@
                 <img src="/SportVarietyFit/bildes/profile.png" alt="Profile">
                 <ul class="profile-dropdown">
                     <?php if (isset($_SESSION['user_id'])) { ?>
-                        <li><a href="#">Profile</a></li>
-                        <li><a href="#">Logout</a></li>
+                        <li><a href="/SportVarietyFit/Profile/profile.php">Profile</a></li>
+                        <li><a href="/SportVarietyFit/Profile/logout.php">Logout</a></li>
                     <?php } else { ?>
-                        <li><a href="#">Login</a></li>
-                        <li><a href="#">Register</a></li>
+                        <li><a href="/SportVarietyFit/Profile/Login.php">Login</a></li>
+                        <li><a href="/SportVarietyFit/Profile/register.php">Register</a></li>
                     <?php } ?>
                 </ul>
             </div>
@@ -43,11 +43,11 @@
                 <a href="#" onclick="toggleMobileProfileDropdown()">Profile</a>
                 <ul class="mobile-profile-dropdown">
                     <?php if (isset($_SESSION['user_id'])) { ?>
-                        <li><a href="#">Profile</a></li>
-                        <li><a href="#">Logout</a></li>
+                        <li><a href="/SportVarietyFit/Profile/profile.php">Profile</a></li>
+                        <li><a href="/SportVarietyFit/Profile/logout.php">Logout</a></li>
                     <?php } else { ?>
-                        <li><a href="#">Login</a></li>
-                        <li><a href="#">Register</a></li>
+                        <li><a href="/SportVarietyFit/Profile/login.php">Login</a></li>
+                        <li><a href="/SportVarietyFit/Profile/register.php">Register</a></li>
                     <?php } ?>
                 </ul>
             </li>
