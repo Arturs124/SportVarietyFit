@@ -117,6 +117,21 @@ table td .delete:hover {
         padding: 10px 8px;
         font-size: 0.92rem;
     }
+        .admin-header {
+        flex-wrap: wrap;
+        gap: 10px;
+        padding: 0 8px;
+    }
+
+    .admin-header a {
+        width: 48%;
+    }
+
+    .admin-header a button {
+        width: 100%;
+        padding: 10px;
+        font-size: 0.95rem;
+    }
 }
 
 @media (max-width: 600px) {
@@ -127,6 +142,17 @@ table td .delete:hover {
     table {
         min-width: 700px;
     }
+        .admin-header a {
+        width: 100%;
+    }
+    .admin-header {
+        gap: 8px;
+        padding: 0 6px;
+    }
+    .admin-header a button {
+        padding: 12px;
+        font-size: 1rem;
+    }
 }
 
 @media (max-width: 420px) {
@@ -134,4 +160,32 @@ table td .delete:hover {
         padding: 8px 6px;
         font-size: 0.88rem;
     }
+}
+
+/* AdminBar */
+.admin-header {
+    display: flex;
+    gap: 18px;
+    justify-content: center;
+    margin: 24px 0 32px 0;
+}
+
+.admin-header a button {
+    background: #8b0000;
+    color: #fff;
+    border: none;
+    border-radius: 6px;
+    padding: 10px 22px;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.18s, box-shadow 0.18s;
+    box-shadow: 0 2px 8px #0078d71a;
+}
+
+.admin-header a button:hover,
+.admin-header a button:focus {
+    background: #4d0000;
+    box-shadow: 0 4px 16px #0078d733;
+    outline: none;
 }

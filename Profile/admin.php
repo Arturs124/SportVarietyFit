@@ -42,6 +42,7 @@ $users = $stmt->get_result();
 <?php include '../Include/header.php'; ?>
 <div class="admin-wrapper">
     <h1 style="text-align: center;">Admin Panel</h1>
+    <?php include '../Include/adminbar.php'; ?>
     <div class="admin-container">
         <h2>Admin Dashboard</h2>
         
