@@ -3,7 +3,7 @@ session_start();
 require_once 'db.php';
 
 if (!isset($_SESSION['user_id']) || $_SESSION['role'] !== 'admin') {
-    header("Location: login.php");
+    header("Location: /SportVarietyFit/index.php");
     exit();
 }
 if (isset($_GET['delete_id'])) {

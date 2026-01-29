@@ -1,3 +1,14 @@
+<?php
+session_start();
+require_once 'Profile/db.php';
+
+$user = null;
+if (isset($_SESSION['user_id'])) {
+    $uid = intval($_SESSION['user_id']);
+    $res = $conn->query("SELECT is_pro FROM users WHERE id=$uid");
+    $user = $res ? $res->fetch_assoc() : null;
+}
+?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
