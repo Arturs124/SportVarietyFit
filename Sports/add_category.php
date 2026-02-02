@@ -16,6 +16,32 @@ if (!$user || $user['role'] !== 'admin') {
     header("Location: /SportVarietyFit/index.php");
     exit();
 }
+//  pievieno kategoriju
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+
+    $badge = trim($_POST['badge']);
+    $title = trim($_POST['card_title']);
+
+    if ($badge && $title && $_FILES['image']['name']) {
+
+        $ext = pathinfo($_FILES['image']['name'], PATHINFO_EXTENSION);
+        $filename = uniqid('sport_') . ".$ext";
+
+        move_uploaded_file(
+            $_FILES['image']['tmp_name'],
+            __DIR__ . "/../uploads/$filename"
+        );
+
+        $stmt = $conn->prepare(
+            "INSERT INTO sports_categories (image, badge, card_title) VALUES (?, ?, ?)"
+        );
+        $stmt->bind_param("sss", $filename, $badge, $title);
+        $stmt->execute();
+    }
+
+    header("Location: add_category.php");
+    exit();
+}
 ?>
 <!DOCTYPE html>
 <html>
@@ -34,14 +60,14 @@ if (!$user || $user['role'] !== 'admin') {
     <div class="form-container" style="max-width:500px;margin:30px auto;padding:24px;background:#fff;border-radius:12px;box-shadow:0 2px 16px #0001;">
         <h2>Add New Sports Category</h2>
         <!-- Pievienot kategoriju -->
-        <form>
+        <form method="post" enctype="multipart/form-data">
             <label>Category Image:</label>
-            <input type="file" accept="image/*" style="margin-bottom:10px;"><br>
+            <input type="file" accept="image/*" name="image" style="margin-bottom:10px;"><br>
             <label>Badge:</label>
-            <input type="text" placeholder="Category name" style="width:100%;margin-bottom:10px;"><br>
+            <input type="text" name="badge" placeholder="Category name" style="width:100%;margin-bottom:10px;"><br>
             <label>Card Title (short description):</label>
-            <input type="text" placeholder="Short description" style="width:100%;margin-bottom:10px;"><br>
-            <button type="button" style="padding:10px 22px;background:#a71d2a;color:#fff;border:none;border-radius:6px;font-weight:600;">Add Category</button>
+            <input type="text" name="card_title" placeholder="short description" style="width:100%;margin-bottom:10px;"><br>
+            <button type="submit" style="padding:10px 22px;background:#a71d2a;color:#fff;border:none;border-radius:6px;font-weight:600;">Add Category</button>
         </form>
         <!-- Esošās kategorijas -->
         <h3 style="margin-top:30px;">Existing Categories</h3>
@@ -55,7 +81,7 @@ if (!$user || $user['role'] !== 'admin') {
             <label>Image:</label>
             <input type="file" accept="image/*"><br><br>
             <img src="" alt="Current image" style="width:80px;height:50px;object-fit:cover;border-radius:4px;"><br><br>
-            <button type="button">Update Category</button>
+            <button type="submit">Update Category</button>
         </form>
     </div>
 </div>
