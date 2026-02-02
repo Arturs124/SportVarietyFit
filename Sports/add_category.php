@@ -23,7 +23,7 @@ if (!$user || $user['role'] !== 'admin') {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Add sports category</title>
-    <link rel="stylesheet" href="#">
+    <link rel="stylesheet" href="../Assets/css/add_category.css">
 </head>
 <body>
 <?php include '../Include/header.php'; ?>
@@ -45,15 +45,6 @@ if (!$user || $user['role'] !== 'admin') {
         </form>
         <!-- Esošās kategorijas -->
         <h3 style="margin-top:30px;">Existing Categories</h3>
-        <ul style="list-style:none;padding:0;">
-            <li style="display:flex;align-items:center;gap:10px;margin-bottom:10px;">
-                <img src="placeholder.jpg" style="width:60px;height:40px;object-fit:cover;border-radius:4px;">
-                <span><strong>Badge Name</strong></span>
-                <span>Card title text</span>
-                <a href="#" class="edit-btn">Edit</a>
-                <a href="#" class="delete-btn">Delete</a>
-            </li>
-        </ul>
         <!-- Rediģēt kategoriju -->
         <h3>Edit Category</h3>
         <form>
@@ -63,7 +54,7 @@ if (!$user || $user['role'] !== 'admin') {
             <input type="text" value="Current card title" style="width:100%;margin-bottom:10px;">
             <label>Image:</label>
             <input type="file" accept="image/*"><br><br>
-            <img src="placeholder.jpg" alt="Current image" style="width:80px;height:50px;object-fit:cover;border-radius:4px;"><br><br>
+            <img src="" alt="Current image" style="width:80px;height:50px;object-fit:cover;border-radius:4px;"><br><br>
             <button type="button">Update Category</button>
         </form>
     </div>
