@@ -8,6 +8,11 @@ if (isset($_SESSION['user_id'])) {
     $res = $conn->query("SELECT is_pro FROM users WHERE id=$uid");
     $user = $res ? $res->fetch_assoc() : null;
 }
+
+/* sporta kategorija */
+$categories = $conn
+    ->query("SELECT * FROM sports_categories ORDER BY created_at DESC LIMIT 6")
+    ->fetch_all(MYSQLI_ASSOC);
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -24,33 +29,14 @@ if (isset($_SESSION['user_id'])) {
 <!-- Sporta kategorija -->
 <h1 class="choose-sport-title" style="text-align:center;margin-top:40px;">Select Your Sport</h1>
 <div class="sports-grid">
-    <div class="sport-card">
-        <img src="Bildes/category/football.jpg" alt="Football" class="card-image" style="width:300px;height:300px;object-fit:cover;border-radius:8px;margin-bottom:10px;">
-        <p class="badge" style="font-weight:bold;">Football</p>
-        <h2 class="card-title" style="font-size:1.1rem;">Strength & Speed</h2>
-        <a href="#" class="card-button" style="display:inline-block;margin-top:8px;padding:8px 16px;background:#a71d2a;color:#fff;border-radius:6px;text-decoration:none;">View</a>
-    </div>
-
-    <div class="sport-card">
-        <img src="Bildes/category/basketball.jpg" alt="Basketball" class="card-image" style="width:300px;height:300px;object-fit:cover;border-radius:8px;margin-bottom:10px;">
-        <p class="badge" style="font-weight:bold;">Basketball</p>
-        <h2 class="card-title" style="font-size:1.1rem;">Explosive Power</h2>
-        <a href="#" class="card-button" style="display:inline-block;margin-top:8px;padding:8px 16px;background:#a71d2a;color:#fff;border-radius:6px;text-decoration:none;">View</a>
-    </div>
-
-    <div class="sport-card">
-        <img src="Bildes/category/motocross.jpg" alt="Motocross" class="card-image" style="width:300px;height:300px;object-fit:cover;border-radius:8px;margin-bottom:10px;">
-        <p class="badge" style="font-weight:bold;">Motocross</p>
-        <h2 class="card-title" style="font-size:1.1rem;">Endurance & Control</h2>
-        <a href="#" class="card-button" style="display:inline-block;margin-top:8px;padding:8px 16px;background:#a71d2a;color:#fff;border-radius:6px;text-decoration:none;">View</a>
-    </div>
-
-    <div class="sport-card">
-        <img src="Bildes/category/swimming.jpg" alt="Swimming" class="card-image" style="width:300px;height:300px;object-fit:cover;border-radius:8px;margin-bottom:10px;">
-        <p class="badge" style="font-weight:bold;">Swimming</p>
-        <h2 class="card-title" style="font-size:1.1rem;">Technique & Speed</h2>
-        <a href="#" class="card-button" style="display:inline-block;margin-top:8px;padding:8px 16px;background:#a71d2a;color:#fff;border-radius:6px;text-decoration:none;">View</a>
-    </div>
+    <?php foreach ($categories as $cat): ?>
+        <div class="sport-card">
+            <img src="uploads/<?= htmlspecialchars($cat['image']) ?>" alt="<?= htmlspecialchars($cat['badge']) ?>" class="card-image" style="width:300px;height:300px;object-fit:cover;border-radius:8px;margin-bottom:10px;">
+            <p class="badge" style="font-weight:bold;"><?= htmlspecialchars($cat['badge']) ?></p>
+            <h2 class="card-title" style="font-size:1.1rem;"><?= htmlspecialchars($cat['card_title']) ?></h2>
+            <a href="#" class="card-button" style="display:inline-block;margin-top:8px;padding:8px 16px;background:#a71d2a;color:#fff;border-radius:6px;text-decoration:none;">View</a>
+        </div>
+    <?php endforeach; ?>
 </div>
 <div style="text-align:center;margin-top:24px;">
     <a href="#" style="display:inline-block;padding:12px 32px;background:#2b4cff;color:#fff;border-radius:8px;text-decoration:none;font-weight:600;font-size:1.1em;box-shadow:0 2px 8px #2b4cff22;">View More Sports</a>
