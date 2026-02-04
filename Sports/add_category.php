@@ -71,6 +71,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         </form>
         <!-- Esošās kategorijas -->
         <h3 style="margin-top:30px;">Existing Categories</h3>
+        <?php $categories = $conn ->query("SELECT id, badge, image, card_title FROM sports_categories") ->fetch_all(MYSQLI_ASSOC);?>
+        <?php foreach ($categories as $category): ?>
+            <li>
+                <img src="../uploads/<?= htmlspecialchars($category['image']) ?>">
+                <span><?= htmlspecialchars($category['badge']) ?></span>
+                <span><?= htmlspecialchars($category['card_title']) ?></span>
+                <a href="#" class="edit-btn">Edit</a>
+                <a href="#" class="delete-btn" onclick="return confirm('Are you sure you want to delete this category?');">Delete</a>
+            </li>
+        <?php endforeach; ?>
         <!-- Rediģēt kategoriju -->
         <h3>Edit Category</h3>
         <form>
