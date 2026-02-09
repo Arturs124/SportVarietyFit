@@ -75,3 +75,56 @@
         padding: 18px;
     }
 }
+
+.form-container li {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    margin-bottom: 10px;
+    background-color: #f9f9f9;
+    transition: background-color 0.3s ease;
+}
+
+.form-container li img {
+    width: 80px;
+    height: 50px;
+    border-radius: 5px;
+    margin-right: 10px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.form-container li span {
+    font-size: 16px;
+    font-weight: bold;
+}
+
+.form-container li a {
+    text-decoration: none;
+    padding: 8px 12px;
+    border-radius: 5px;
+    font-size: 14px;
+    font-weight: bold;
+    margin-left: 10px;
+    transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.form-container li .edit-btn {
+    background-color: #388d00;
+    color: white;
+}
+
+.form-container li .edit-btn:hover {
+    background-color: #106300;
+}
+
+.form-container li .delete-btn {
+    background-color: #dc3545;
+    color: white;
+}
+
+.form-container li .delete-btn:hover {
+    background-color: #a71d2a;
+}

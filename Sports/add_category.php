@@ -42,6 +42,25 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     header("Location: add_category.php");
     exit();
 }
+
+// Dzēst kategoriju
+if (isset($_GET['delete_category'])) {
+    $category_id = $_GET['delete_category'];
+
+    // Dzēš kategoroju no datubāzes
+    $delete_sql = "DELETE FROM sports_categories WHERE id = ?";
+    $delete_stmt = $conn->prepare($delete_sql);
+    $delete_stmt->bind_param("i", $category_id);
+
+    if ($delete_stmt->execute()) {
+        $_SESSION['success'] = "Category deleted successfully!";
+    } else {
+        $_SESSION['error'] = "Failed to delete category.";
+    }
+
+    header("Location: add_category.php");
+    exit();
+}
 ?>
 <!DOCTYPE html>
 <html>
@@ -78,7 +97,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 <span><?= htmlspecialchars($category['badge']) ?></span>
                 <span><?= htmlspecialchars($category['card_title']) ?></span>
                 <a href="#" class="edit-btn">Edit</a>
-                <a href="#" class="delete-btn" onclick="return confirm('Are you sure you want to delete this category?');">Delete</a>
+                <a href="add_category.php?delete_category=<?= $category['id'] ?>" class="delete-btn" onclick="return confirm('Are you sure you want to delete this category?');">Delete</a>
             </li>
         <?php endforeach; ?>
         <!-- Rediģēt kategoriju -->
