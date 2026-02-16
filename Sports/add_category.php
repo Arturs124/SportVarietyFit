@@ -61,6 +61,49 @@ if (isset($_GET['delete_category'])) {
     header("Location: add_category.php");
     exit();
 }
+
+// Rediģēt kateogoriju
+if (isset($_GET['edit_category'])) {
+    $category_id = (int) $_GET['edit_category'];
+
+    $stmt = $conn->prepare("SELECT * FROM sports_categories WHERE id = ?");
+    $stmt->bind_param("i", $category_id);
+    $stmt->execute();
+    $result = $stmt->get_result();
+
+    if ($result->num_rows) {
+        $category = $result->fetch_assoc();
+    } else {
+        $_SESSION['error'] = "Category not found.";
+        header("Location: add_category.php");
+        exit;
+    }
+}
+
+// Atjaunot kategoriju
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['edit_category'])) {
+
+    $id = (int) $_POST['category_id'];
+    $badge = trim($_POST['badge']);
+    $card_title = trim($_POST['card_title']);
+    // Jaunā bilde tiek augšupielādēta
+    if (!empty($_FILES['image']['name'])) {
+        $upload_dir = __DIR__ . "/../uploads/";
+        if (!is_dir($upload_dir)) mkdir($upload_dir, 0777, true);
+        $file_name = uniqid() . "_" . $_FILES['image']['name'];
+        move_uploaded_file($_FILES['image']['tmp_name'], $upload_dir . $file_name);
+        $stmt = $conn->prepare("UPDATE sports_categories SET badge=?, card_title=?, image=? WHERE id=?");
+        $stmt->bind_param("sssi", $badge, $card_title, $file_name, $id);
+    } else {
+        // atjaunot tikai tekstu
+        $stmt = $conn->prepare("UPDATE sports_categories SET badge=?, card_title=? WHERE id=?");
+        $stmt->bind_param("ssi", $badge, $card_title, $id);
+    }
+    $stmt->execute();
+    $_SESSION['success'] = "Category updated!";
+    header("Location: add_category.php");
+    exit;
+}
 ?>
 <!DOCTYPE html>
 <html>
@@ -101,17 +144,20 @@ if (isset($_GET['delete_category'])) {
             </li>
         <?php endforeach; ?>
         <!-- Rediģēt kategoriju -->
-        <h3>Edit Category</h3>
-        <form>
-            <label>Category Name:</label>
-            <input type="text" value="Current badge name" style="width:100%;margin-bottom:10px;">
-            <label>Card Title:</label>
-            <input type="text" value="Current card title" style="width:100%;margin-bottom:10px;">
-            <label>Image:</label>
-            <input type="file" accept="image/*"><br><br>
-            <img src="" alt="Current image" style="width:80px;height:50px;object-fit:cover;border-radius:4px;"><br><br>
-            <button type="submit">Update Category</button>
-        </form>
+        <?php if (isset($category)) : ?>
+            <h3>Edit Category</h3>
+            <form method="POST" enctype="multipart/form-data">
+                <input type="hidden" name="category_id" value="<?= $category['id']; ?>">
+                <label>Category Name:</label>
+                <input type="text" name="badge" value="<?= htmlspecialchars($category['badge']); ?>" required>
+                <label>Card Title:</label>
+                <input type="text" name="card_title" value="<?= htmlspecialchars($category['card_title']); ?>" required>
+                <label>Image:</label>
+                <input type="file" name="image" accept="image/*">
+                <img src="../uploads/<?= $category['image']; ?>" width="80">
+                <button type="submit" name="edit_category">Update Category</button>
+            </form>
+        <?php endif; ?>
     </div>
 </div>
 <?php include '../Include/footer.php'; ?>
