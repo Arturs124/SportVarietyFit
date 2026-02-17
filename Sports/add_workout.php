@@ -16,6 +16,21 @@ if (!$user || $user['role'] !== 'admin') {
     header("Location: /SportVarietyFit/index.php");
     exit();
 }
+
+// Parāda visas sporta kategorijas select izvēlnē
+$categories = [];
+$res = $conn->query("SELECT id, badge FROM sports_categories ORDER BY badge ASC");
+while ($row = $res->fetch_assoc()) {
+    $categories[] = $row;
+}
+
+// Pievieno jaunu treniņu datubāzē
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['add_workout'])) {
+    $sports_category_id = intval($_POST['sports_category_id']);
+    $workout_title = trim($_POST['workout_title']);
+    $description = trim($_POST['description']);
+    $image = '';
+}
 ?>
 <!DOCTYPE html>
 <html>
@@ -36,13 +51,16 @@ if (!$user || $user['role'] !== 'admin') {
             <label>Sport Category:</label>
             <select>
                 <option>Select Sport</option>
+                <?php foreach ($categories as $category): ?>
+                    <option value="<?= $category['id'] ?>"><?= htmlspecialchars($category['badge']) ?></option>
+                <?php endforeach; ?>
             </select>
             <label>Workout Title:</label>
-            <input type="text">
+            <input type="text" name="workout_title">
             <label>Description:</label>
-            <textarea></textarea>
+            <textarea name="description"></textarea>
             <label>Image:</label>
-            <input type="file">
+            <input type="file" name="image">
             <button type="submit">Submit</button>
         </form>
     </div>
