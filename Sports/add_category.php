@@ -17,28 +17,17 @@ if (!$user || $user['role'] !== 'admin') {
     exit();
 }
 //  pievieno kategoriju
-if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && !isset($_POST['edit_category'])) {
     $badge = trim($_POST['badge']);
     $title = trim($_POST['card_title']);
-
-    if ($badge && $title && $_FILES['image']['name']) {
-
+    if ($badge && $title && !empty($_FILES['image']['name'])) {
         $ext = pathinfo($_FILES['image']['name'], PATHINFO_EXTENSION);
         $filename = uniqid('sport_') . ".$ext";
-
-        move_uploaded_file(
-            $_FILES['image']['tmp_name'],
-            __DIR__ . "/../uploads/$filename"
-        );
-
-        $stmt = $conn->prepare(
-            "INSERT INTO sports_categories (image, badge, card_title) VALUES (?, ?, ?)"
-        );
+        move_uploaded_file($_FILES['image']['tmp_name'],__DIR__ . "/../uploads/$filename");
+        $stmt = $conn->prepare("INSERT INTO sports_categories (image, badge, card_title) VALUES (?, ?, ?)");
         $stmt->bind_param("sss", $filename, $badge, $title);
         $stmt->execute();
     }
-
     header("Location: add_category.php");
     exit();
 }
@@ -57,7 +46,6 @@ if (isset($_GET['delete_category'])) {
     } else {
         $_SESSION['error'] = "Failed to delete category.";
     }
-
     header("Location: add_category.php");
     exit();
 }
@@ -139,25 +127,25 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['edit_category'])) {
                 <img src="../uploads/<?= htmlspecialchars($category['image']) ?>">
                 <span><?= htmlspecialchars($category['badge']) ?></span>
                 <span><?= htmlspecialchars($category['card_title']) ?></span>
-                <a href="#" class="edit-btn">Edit</a>
+                <a href="add_category.php?edit_category=<?= $category['id'] ?>" class="edit-btn">Edit</a>
                 <a href="add_category.php?delete_category=<?= $category['id'] ?>" class="delete-btn" onclick="return confirm('Are you sure you want to delete this category?');">Delete</a>
             </li>
         <?php endforeach; ?>
         <!-- Rediģēt kategoriju -->
-        <?php if (isset($category)) : ?>
+        <?php if (isset($_GET['edit_category'])) { ?>
             <h3>Edit Category</h3>
-            <form method="POST" enctype="multipart/form-data">
+            <form action="add_category.php" method="POST" enctype="multipart/form-data">
                 <input type="hidden" name="category_id" value="<?= $category['id']; ?>">
                 <label>Category Name:</label>
-                <input type="text" name="badge" value="<?= htmlspecialchars($category['badge']); ?>" required>
+                <input type="text" name="badge" id="badge" value="<?= htmlspecialchars($category['badge']); ?>" required>
                 <label>Card Title:</label>
-                <input type="text" name="card_title" value="<?= htmlspecialchars($category['card_title']); ?>" required>
+                <input type="text" name="card_title" id="card_title" value="<?= htmlspecialchars($category['card_title']); ?>" required>
                 <label>Image:</label>
-                <input type="file" name="image" accept="image/*">
+                <input type="file" name="image" id="image" accept="image/*">
                 <img src="../uploads/<?= $category['image']; ?>" width="80">
                 <button type="submit" name="edit_category">Update Category</button>
             </form>
-        <?php endif; ?>
+        <?php } ?>
     </div>
 </div>
 <?php include '../Include/footer.php'; ?>
