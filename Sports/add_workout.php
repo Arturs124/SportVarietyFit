@@ -26,10 +26,29 @@ while ($row = $res->fetch_assoc()) {
 
 // Pievieno jaunu treniņu datubāzē
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['add_workout'])) {
-    $sports_category_id = intval($_POST['sports_category_id']);
+    $sports_category_id = (int) $_POST['sports_category_id'];
     $workout_title = trim($_POST['workout_title']);
     $description = trim($_POST['description']);
     $image = '';
+
+    if (!empty($_FILES['image']['name'])) {
+        $ext = pathinfo($_FILES['image']['name'], PATHINFO_EXTENSION);
+        $image = uniqid('workout_') . ".$ext";
+        $upload_dir = __DIR__ . "/../uploads/";
+        if (!is_dir($upload_dir)) mkdir($upload_dir, 0777, true);
+        move_uploaded_file($_FILES['image']['tmp_name'], $upload_dir . $image);
+    }
+
+    if ($sports_category_id && $workout_title) {
+        $stmt = $conn->prepare("
+            INSERT INTO workouts (sports_category_id, workout_title, description, image) VALUES (?, ?, ?, ?)");
+        $stmt->bind_param("isss", $sports_category_id, $workout_title, $description, $image);
+        $stmt->execute();
+        $_SESSION['success'] = "Workout added successfully!";
+        header("Location: add_workout.php");
+        exit;
+    }
+    $error = "Sport category and workout title are required.";
 }
 ?>
 <!DOCTYPE html>
@@ -47,23 +66,51 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['add_workout'])) {
     <?php include '../Include/adminbar.php'; ?>
     <div class="form-container">
         <h2>Add New Workout</h2>
-        <form method="post">
+        <form method="POST" enctype="multipart/form-data">
             <label>Sport Category:</label>
-            <select>
-                <option>Select Sport</option>
+            <select name="sports_category_id" required>
+                <option value="">Select Sport</option>
                 <?php foreach ($categories as $category): ?>
-                    <option value="<?= $category['id'] ?>"><?= htmlspecialchars($category['badge']) ?></option>
+                    <option value="<?= $category['id'] ?>">
+                        <?= htmlspecialchars($category['badge']) ?>
+                    </option>
                 <?php endforeach; ?>
             </select>
             <label>Workout Title:</label>
-            <input type="text" name="workout_title">
+            <input type="text" name="workout_title" required>
             <label>Description:</label>
             <textarea name="description"></textarea>
             <label>Image:</label>
             <input type="file" name="image">
-            <button type="submit">Submit</button>
+            <button type="submit" name="add_workout">Submit</button>
         </form>
     </div>
+</div>
+<div class="form-container">
+    <h2>All Workouts</h2>
+    <table>
+        <thead>
+            <tr>
+                <th>Category</th>
+                <th>Title</th>
+                <th>Description</th>
+                <th>Image</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td>
+                    <a href="#">Edit</a>
+                    <a href="#">Delete</a>
+                </td>
+            </tr>
+        </tbody>
+    </table>
 </div>
 <?php include '../Include/footer.php'; ?>
 </body>
