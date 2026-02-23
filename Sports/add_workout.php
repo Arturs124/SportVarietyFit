@@ -50,6 +50,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['add_workout'])) {
     }
     $error = "Sport category and workout title are required.";
 }
+// Parāda visus treniņus tabulā
+$sql = "
+    SELECT workouts.id, workouts.workout_title, workouts.description, workouts.image, sports_categories.badge
+    FROM workouts
+    JOIN sports_categories ON workouts.sports_category_id = sports_categories.id
+    ORDER BY workouts.id DESC
+";
+$result = $conn->query($sql);
 ?>
 <!DOCTYPE html>
 <html>
@@ -99,16 +107,22 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['add_workout'])) {
             </tr>
         </thead>
         <tbody>
+        <?php while ($row = $result->fetch_assoc()): ?>
             <tr>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
+                <td><?= htmlspecialchars($row['badge']) ?></td>
+                <td><?= htmlspecialchars($row['workout_title']) ?></td>
+                <td><?= htmlspecialchars($row['description']) ?></td>
+                <td>
+                    <?php if ($row['image']): ?>
+                        <img src="../uploads/<?= htmlspecialchars($row['image']) ?>" width="80">
+                    <?php endif; ?>
+                </td>
                 <td>
                     <a href="#">Edit</a>
                     <a href="#">Delete</a>
                 </td>
             </tr>
+        <?php endwhile; ?>
         </tbody>
     </table>
 </div>
