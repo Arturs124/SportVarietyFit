@@ -34,7 +34,7 @@ $categories = $conn
             <img src="uploads/<?= htmlspecialchars($cat['image']) ?>" alt="<?= htmlspecialchars($cat['badge']) ?>" class="card-image" style="width:300px;height:300px;object-fit:cover;border-radius:8px;margin-bottom:10px;">
             <p class="badge" style="font-weight:bold;"><?= htmlspecialchars($cat['badge']) ?></p>
             <h2 class="card-title" style="font-size:1.1rem;"><?= htmlspecialchars($cat['card_title']) ?></h2>
-            <a href="#" class="card-button" style="display:inline-block;margin-top:8px;padding:8px 16px;background:#a71d2a;color:#fff;border-radius:6px;text-decoration:none;">View</a>
+            <a href="sports/sports.php?sport=<?= urlencode(strtolower($cat['badge'])) ?>" class="card-button" style="display:inline-block;margin-top:8px;padding:8px 16px;background:#a71d2a;color:#fff;border-radius:6px;text-decoration:none;">View</a>
         </div>
     <?php endforeach; ?>
 </div>
