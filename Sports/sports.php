@@ -29,6 +29,13 @@ $result = $conn->query(" SELECT id, workout_title, image FROM workouts
 </head>
 <body>
 <?php include '../Include/header.php'; ?>
+<div class="sport-hero">
+    <img src="../uploads/<?= htmlspecialchars($category['image']) ?>" alt="<?= htmlspecialchars($category['badge']) ?>" class="sport-hero-image">
+    <div class="sport-hero-content">
+        <span class="sport-badge"><?= htmlspecialchars($category['badge']) ?></span>
+        <div class="sport-title"><?= htmlspecialchars($category['card_title']) ?></div>
+    </div>
+</div>
 <div class="workout-list-section">
     <h2>Workouts for <?= htmlspecialchars($category['badge']) ?></h2>
     <?php if ($result->num_rows > 0): ?>

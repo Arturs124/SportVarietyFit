@@ -58,6 +58,45 @@ $sql = "
     ORDER BY workouts.id DESC
 ";
 $result = $conn->query($sql);
+// Dzēst treniņu
+if (isset($_GET['delete_id'])) {
+    $id = (int) $_GET['delete_id'];
+    $conn->query("DELETE FROM workouts WHERE id=$id");
+    header("Location: add_workout.php");
+    exit;
+}
+// Iegūst treniņa datus rediģēšanai
+$workout_to_update = null;
+if (isset($_GET['edit'])) {
+    $id = (int) $_GET['edit'];
+    $stmt = $conn->prepare("SELECT * FROM workouts WHERE id=?");
+    $stmt->bind_param("i", $id);
+    $stmt->execute();
+    $workout_to_update = $stmt->get_result()->fetch_assoc();
+}
+// Atjauno treniņa datus datubāzē
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_workout'])) {
+    $id = (int) $_POST['workout_id'];
+    $cat = (int) $_POST['sports_category_id'];
+    $title = $_POST['workout_title'];
+    $type = $_POST['workout_type'];
+    $desc = $_POST['description'];
+    $image = $_POST['existing_image'];
+    // atjauno jaunu bildi
+    if (!empty($_FILES['image']['name'])) {
+        $ext = pathinfo($_FILES['image']['name'], PATHINFO_EXTENSION);
+        $image = uniqid('workout_') . ".$ext";
+        move_uploaded_file($_FILES['image']['tmp_name'], __DIR__ . "/../uploads/" . $image);
+    }
+    $stmt = $conn->prepare("
+        UPDATE workouts 
+        SET sports_category_id=?, workout_title=?, workout_type=?, description=?, image=? WHERE id=?");
+    $stmt->bind_param("issssi", $cat, $title, $type, $desc, $image, $id);
+    $stmt->execute();
+
+    header("Location: add_workout.php");
+    exit;
+}
 ?>
 <!DOCTYPE html>
 <html>
@@ -73,24 +112,34 @@ $result = $conn->query($sql);
     <h1 style="text-align: center;">Admin Panel</h1>
     <?php include '../Include/adminbar.php'; ?>
     <div class="form-container">
-        <h2>Add New Workout</h2>
+        <h2><?= $workout_to_update ? 'Edit Workout' : 'Add New Workout' ?></h2>
         <form method="POST" enctype="multipart/form-data">
+            <?php if ($workout_to_update): ?>
+                <input type="hidden" name="workout_id" value="<?= $workout_to_update['id'] ?>">
+                <input type="hidden" name="existing_image" value="<?= $workout_to_update['image'] ?>">
+            <?php endif; ?>
             <label>Sport Category:</label>
             <select name="sports_category_id" required>
                 <option value="">Select Sport</option>
                 <?php foreach ($categories as $category): ?>
-                    <option value="<?= $category['id'] ?>">
+                    <option value="<?= $category['id'] ?>"
+                        <?= $workout_to_update && $workout_to_update['sports_category_id'] == $category['id'] ? 'selected' : '' ?>>
                         <?= htmlspecialchars($category['badge']) ?>
                     </option>
                 <?php endforeach; ?>
             </select>
             <label>Workout Title:</label>
-            <input type="text" name="workout_title" required>
+            <input type="text" name="workout_title" value="<?= $workout_to_update ? htmlspecialchars($workout_to_update['workout_title']) : '' ?>"required>
             <label>Description:</label>
-            <textarea name="description"></textarea>
+            <textarea name="description"><?= $workout_to_update ? htmlspecialchars($workout_to_update['description']) : '' ?></textarea>
             <label>Image:</label>
             <input type="file" name="image">
-            <button type="submit" name="add_workout">Submit</button>
+            <?php if ($workout_to_update && $workout_to_update['image']): ?>
+                    <img src="../uploads/<?= $workout_to_update['image'] ?>" width="100">
+            <?php endif; ?>
+            <button type="submit" name="<?= $workout_to_update ? 'update_workout' : 'add_workout' ?>">
+                <?= $workout_to_update ? 'Update Workout' : 'Add Workout' ?>
+            </button>
         </form>
     </div>
 </div>
@@ -118,8 +167,8 @@ $result = $conn->query($sql);
                     <?php endif; ?>
                 </td>
                 <td>
-                    <a href="#">Edit</a>
-                    <a href="#">Delete</a>
+                    <a href="add_workout.php?edit=<?= $row['id'] ?>">Edit</a>
+                    <a href="add_workout.php?delete_id=<?= $row['id'] ?>" onclick="return confirm('Delete this workout?')">Delete</a>
                 </td>
             </tr>
         <?php endwhile; ?>
