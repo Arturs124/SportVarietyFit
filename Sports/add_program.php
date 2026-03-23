@@ -23,6 +23,12 @@ $res = $conn->query("SELECT id, badge FROM sports_categories ORDER BY badge ASC"
 while ($row = $res->fetch_assoc()) {
     $categories[] = $row;
 }
+// Parāda visas treniņu programmas select izvēlnē
+$workout_types = [];
+$res2 = $conn->query("SELECT id, workout_title FROM workouts ORDER BY workout_title ASC");
+while ($row2 = $res2->fetch_assoc()) {
+    $workout_types[] = $row2;
+}
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -49,14 +55,21 @@ while ($row = $res->fetch_assoc()) {
                     <option value="<?= $category['id'] ?>"><?= htmlspecialchars($category['badge']) ?></option>
                 <?php endforeach; ?>
             </select>
+            <label>Workout Type:</label>
+            <select name="workout_type_id" required>
+                <option value="">Select Type</option>
+                <?php foreach ($workout_types as $type): ?>
+                    <option value="<?= $type['id'] ?>"><?= htmlspecialchars($type['workout_title']) ?></option>
+                <?php endforeach; ?>
+            </select>
             <label>Image:</label>
-            <input type="file" name="image">
+            <input type="file" name="image" accept="image/*" required>
             <label>Title:</label>
-            <input type="text" name="title">
+            <input type="text" name="title" required>
             <label>Short Description:</label>
-            <textarea name="short_description" rows="3"></textarea>
+            <textarea name="short_description" rows="3" required></textarea>
             <label>Age Group:</label>
-            <select>
+            <select name="age_group" required>
                 <option value="">Select Age Group</option>
                 <option value="kid">Kid</option>
                 <option value="teen">Teen</option>
@@ -64,7 +77,7 @@ while ($row = $res->fetch_assoc()) {
                 <option value="senior">Senior</option>
             </select>
             <label>Level:</label>
-            <select>
+            <select name="level" required>
                 <option value="">Select Level</option>
                 <option value="beginner">Beginner</option>
                 <option value="intermediate">Intermediate</option>
