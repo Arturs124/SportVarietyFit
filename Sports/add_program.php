@@ -29,6 +29,41 @@ $res2 = $conn->query("SELECT id, workout_title FROM workouts ORDER BY workout_ti
 while ($row2 = $res2->fetch_assoc()) {
     $workout_types[] = $row2;
 }
+// Pievieno workout programmu
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['add_program'])) {
+    $sports_category_id = (int) $_POST['sports_category_id'];
+    $workout_type_id = (int) $_POST['workout_type_id'];
+    $title = trim($_POST['title']);
+    $short_description = trim($_POST['short_description']);
+    $age_group = $_POST['age_group'];
+    $level = $_POST['level'];
+    $image = '';
+    // Pievieno bildi
+    if (!empty($_FILES['image']['name'])) {
+        $ext = pathinfo($_FILES['image']['name'], PATHINFO_EXTENSION);
+        $image = uniqid('program_') . ".$ext";
+        move_uploaded_file($_FILES['image']['tmp_name'],__DIR__ . "/../uploads/" . $image);
+    }
+    // Pievieno datu bāzē
+    if ($sports_category_id && $workout_type_id && $title && $short_description && $age_group && $level) {
+        $stmt = $conn->prepare("
+            INSERT INTO workout_programs 
+            (sports_category_id, workout_type_id, image, title, short_description, age_group, level) VALUES (?, ?, ?, ?, ?, ?, ?)");
+        $stmt->bind_param("iisssss", 
+            $sports_category_id, 
+            $workout_type_id, 
+            $image, 
+            $title, 
+            $short_description, 
+            $age_group, 
+            $level
+        );
+        $stmt->execute();
+        header("Location: " . $_SERVER['REQUEST_URI']);
+        exit;
+    }
+    $error = "All fields are required.";
+}
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -83,7 +118,7 @@ while ($row2 = $res2->fetch_assoc()) {
                 <option value="intermediate">Intermediate</option>
                 <option value="advanced">Advanced</option>
             </select>
-            <button type="submit">Add Program</button>
+            <button type="submit" name="add_program">Add Program</button>
         </form>
     </div>
     <?php include '../Include/footer.php'; ?>
