@@ -29,6 +29,12 @@ $res2 = $conn->query("SELECT id, workout_title FROM workouts ORDER BY workout_ti
 while ($row2 = $res2->fetch_assoc()) {
     $workout_types[] = $row2;
 }
+// Parāda visas workout programmas select izvēlnē
+$workout_programs = [];
+$res3 = $conn->query("SELECT id, title FROM workout_programs ORDER BY title ASC");
+while ($row3 = $res3->fetch_assoc()) {
+    $workout_programs[] = $row3;
+}
 // Pievieno workout programmu
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['add_program'])) {
     $sports_category_id = (int) $_POST['sports_category_id'];
@@ -49,21 +55,44 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['add_program'])) {
         $stmt = $conn->prepare("
             INSERT INTO workout_programs 
             (sports_category_id, workout_type_id, image, title, short_description, age_group, level) VALUES (?, ?, ?, ?, ?, ?, ?)");
-        $stmt->bind_param("iisssss", 
-            $sports_category_id, 
-            $workout_type_id, 
-            $image, 
-            $title, 
-            $short_description, 
-            $age_group, 
-            $level
-        );
+        $stmt->bind_param("iisssss", $sports_category_id, $workout_type_id, $image, $title, $short_description, $age_group, $level);
         $stmt->execute();
         header("Location: " . $_SERVER['REQUEST_URI']);
         exit;
     }
     $error = "All fields are required.";
 }
+// Pievieno vingrinājumus treniņa programmai
+if (isset($_POST['add_exercise'])) {
+    $program_id = (int) $_POST['workout_programs_id'];
+    $title = trim($_POST['exercise_title']);
+    $description = trim($_POST['exercise_description']);
+    $reps = (int) $_POST['exercise_reps'];
+    $time = (int) $_POST['exercise_time'];
+    $image = '';
+    // pievieno bildi
+    if (!empty($_FILES['exercise_image']['name'])) {
+        $ext = pathinfo($_FILES['exercise_image']['name'], PATHINFO_EXTENSION);
+        $image = uniqid('exercise_') . ".$ext";
+        move_uploaded_file($_FILES['exercise_image']['tmp_name'], __DIR__ . "/../uploads/" . $image);
+    }
+    // Pievieno datu bāzē
+    if ($program_id && $title) {
+        $stmt = $conn->prepare("
+            INSERT INTO exercises (workout_program_id, image, title, description, reps, time_seconds, sets, exercise_order, section) VALUES (?, ?, ?, ?, ?, ?, 1, 1, 'main')");
+        $stmt->bind_param("isssii", $program_id, $image, $title, $description, $reps, $time);
+        $stmt->execute();
+    }
+    header("Location: " . $_SERVER['REQUEST_URI']);
+    exit;
+}
+
+$exercises = $conn->query("
+    SELECT e.*, wp.title AS program_name 
+    FROM exercises e
+    JOIN workout_programs wp ON e.workout_program_id = wp.id
+    ORDER BY e.id DESC
+")->fetch_all(MYSQLI_ASSOC);
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -121,6 +150,110 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['add_program'])) {
             <button type="submit" name="add_program">Add Program</button>
         </form>
     </div>
+    <!-- Pievieno vingrinājumus sadaļa-->
+     <!-- Atlasa workout programmu -->
+     <div class="form-container">
+        <h2>Add Exercises</h2>
+        <form method="post" enctype="multipart/form-data">
+            <label>Sports Category</label>
+            <select name="sports_category_id" required>
+                <option value="">Select Sport</option>
+                <?php foreach ($categories as $category): ?>
+                    <option value="<?= $category['id'] ?>"><?= htmlspecialchars($category['badge']) ?></option>
+                <?php endforeach; ?>
+            </select>
+            <label>Workout Type:</label>
+            <select name="workout_type_id" required>
+                <option value="">Select Type</option>
+                <?php foreach ($workout_types as $type): ?>
+                    <option value="<?= $type['id'] ?>"><?= htmlspecialchars($type['workout_title']) ?></option>
+                <?php endforeach; ?>
+            </select>
+            <label>Workout Program:</label>
+            <select name="workout_programs_id" required>
+                <option value="">Select Program</option>
+                <?php foreach ($workout_programs as $program): ?>
+                    <option value="<?= $program['id'] ?>"><?= htmlspecialchars($program['title']) ?></option>
+                <?php endforeach; ?>
+            </select>
+            <!-- vingrinājuma pievienošana -->
+            <fieldset>
+                <div class="exercise-block">
+                    <label>Exercise Image:</label>
+                    <input type="file" name="exercise_image" accept="image/*" required>
+                    <label>Title:</label>
+                    <input type="text" name="exercise_title" required style="width: 100%;">
+                    <label>Description:</label>
+                    <textarea name="exercise_description" style="width: 100%;" rows="2"></textarea>
+                    <label>Reps:</label>
+                    <input type="number" name="exercise_reps" min="0" style="width: 100%;">
+                    <label>Time (seconds):</label>
+                    <input type="number" name="exercise_time" min="0" style="width: 100%;">
+                </div>
+                <button type="button">Add Another Exercise</button>
+            </fieldset>
+            <button type="submit" name="add_exercise">Add Exercises</button>
+        </form>
+     </div>
+     <!-- Rediģēt vingrinājumus -->
+      <div class="form-container">
+        <h2>Manage Exercises</h2>
+        <form method="post">
+            <label>Sports Category</label>
+            <select name="sports_category_id" required>
+                <option value="">Select Sport</option>
+                <?php foreach ($categories as $category): ?>
+                    <option value="<?= $category['id'] ?>"><?= htmlspecialchars($category['badge']) ?></option>
+                <?php endforeach; ?>
+            </select>
+            <label>Workout Type:</label>
+            <select name="workout_type_id" required>
+                <option value="">Select Type</option>
+                <?php foreach ($workout_types as $type): ?>
+                    <option value="<?= $type['id'] ?>"><?= htmlspecialchars($type['workout_title']) ?></option>
+                <?php endforeach; ?>
+            </select>
+            <label>Workout Program:</label>
+            <select name="workout_programs_id" required>
+                <option value="">Select Program</option>
+                <?php foreach ($workout_programs as $program): ?>
+                    <option value="<?= $program['id'] ?>"><?= htmlspecialchars($program['title']) ?></option>
+                <?php endforeach; ?>
+            </select>
+            <h3>Existing Exercises</h3>
+            <Table class="exercise-table">
+                <thead>
+                    <tr>
+                        <th>Image</th>
+                        <th>Title</th>
+                        <th>Description</th>
+                        <th>Reps</th>
+                        <th>Time (seconds)</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <?php foreach ($exercises as $ex): ?>
+                        <tr>
+                            <td>
+                                <?php if ($ex['image']): ?>
+                                    <img src="../uploads/<?=  htmlspecialchars($ex['image']) ?>">
+                                <?php endif; ?>
+                            </td>
+                            <td><?= htmlspecialchars($ex['title']) ?></td>
+                            <td><?= htmlspecialchars($ex['description']) ?></td>
+                            <td><?= htmlspecialchars($ex['reps']) ?></td>
+                            <td><?= htmlspecialchars($ex['time_seconds']) ?></td>
+                            <td>
+                                <a href="#">Edit</a>
+                                <a href="#" onclick="return confirm('Delete this workout?')">Delete</a>
+                            </td>
+                        </tr>
+                    <?php endforeach; ?>
+                </tbody>
+            </Table>
+        </form>
+      </div>
     <?php include '../Include/footer.php'; ?>
 </body>
 </html>

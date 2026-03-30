@@ -51,3 +51,31 @@
     cursor: pointer;
     transition: background-color 0.3s ease;
 }
+fieldset{
+    margin-bottom: 24px;
+    border: 1px solid #e3e8f0;
+    padding: 18px;
+    border-radius: 8px;
+}
+.exercise-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+    background: #fff;
+}
+.exercise-table th,
+.exercise-table td {
+    padding: 10px;
+    border: 1px solid #ddd;
+    text-align: center;
+}
+.exercise-table th {
+    background: #050505;
+    color: #fff;
+}
+.exercise-table img {
+    width: 80px;
+    height: 60px;
+    object-fit: cover;
+    border-radius: 4px;
+}
