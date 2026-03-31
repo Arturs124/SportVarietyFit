@@ -65,34 +65,43 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['add_program'])) {
 // Pievieno vingrinājumus treniņa programmai
 if (isset($_POST['add_exercise'])) {
     $program_id = (int) $_POST['workout_programs_id'];
-    $title = trim($_POST['exercise_title']);
-    $description = trim($_POST['exercise_description']);
-    $reps = (int) $_POST['exercise_reps'];
-    $time = (int) $_POST['exercise_time'];
-    $image = '';
-    // pievieno bildi
-    if (!empty($_FILES['exercise_image']['name'])) {
-        $ext = pathinfo($_FILES['exercise_image']['name'], PATHINFO_EXTENSION);
-        $image = uniqid('exercise_') . ".$ext";
-        move_uploaded_file($_FILES['exercise_image']['tmp_name'], __DIR__ . "/../uploads/" . $image);
-    }
-    // Pievieno datu bāzē
-    if ($program_id && $title) {
+    $titles = $_POST['exercise_title'];
+    $descriptions = $_POST['exercise_description'];
+    $reps = $_POST['exercise_reps'];
+    $times = $_POST['exercise_time'];
+
+    foreach ($titles as $i => $title) {
+        if (empty(trim($title))) continue;
+        $image = '';
+        // pievieno bildi
+        if (!empty($_FILES['exercise_image']['name'][$i])) {
+            $ext = pathinfo($_FILES['exercise_image']['name'][$i], PATHINFO_EXTENSION);
+            $image = uniqid('exercise_') . ".$ext";
+            move_uploaded_file($_FILES['exercise_image']['tmp_name'][$i], __DIR__ . "/../uploads/" . $image);}
         $stmt = $conn->prepare("
-            INSERT INTO exercises (workout_program_id, image, title, description, reps, time_seconds, sets, exercise_order, section) VALUES (?, ?, ?, ?, ?, ?, 1, 1, 'main')");
-        $stmt->bind_param("isssii", $program_id, $image, $title, $description, $reps, $time);
+            INSERT INTO exercises 
+            (workout_program_id, image, title, description, reps, time_seconds, section) VALUES (?, ?, ?, ?, ?, ?, 'main')");
+        $stmt->bind_param(
+            "isssii",$program_id, $image, $title, $descriptions[$i], $reps[$i], $times[$i]);
         $stmt->execute();
     }
     header("Location: " . $_SERVER['REQUEST_URI']);
     exit;
 }
-
+// izvada esošos vingrinājumus tabulā
 $exercises = $conn->query("
     SELECT e.*, wp.title AS program_name 
     FROM exercises e
     JOIN workout_programs wp ON e.workout_program_id = wp.id
     ORDER BY e.id DESC
 ")->fetch_all(MYSQLI_ASSOC);
+// Dzēst vingrinājumu
+if (isset($_GET['delete_id'])) {
+    $id = (int) $_GET['delete_id'];
+    $conn->query("DELETE FROM exercises WHERE id=$id");
+    header("Location: add_program.php");
+    exit;
+}
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -178,19 +187,21 @@ $exercises = $conn->query("
             </select>
             <!-- vingrinājuma pievienošana -->
             <fieldset>
-                <div class="exercise-block">
-                    <label>Exercise Image:</label>
-                    <input type="file" name="exercise_image" accept="image/*" required>
-                    <label>Title:</label>
-                    <input type="text" name="exercise_title" required style="width: 100%;">
-                    <label>Description:</label>
-                    <textarea name="exercise_description" style="width: 100%;" rows="2"></textarea>
-                    <label>Reps:</label>
-                    <input type="number" name="exercise_reps" min="0" style="width: 100%;">
-                    <label>Time (seconds):</label>
-                    <input type="number" name="exercise_time" min="0" style="width: 100%;">
+                <div id="exercises-section">
+                    <div class="exercise-block">
+                        <label>Exercise Image:</label>
+                        <input type="file" name="exercise_image[]" accept="image/*" required>
+                        <label>Title:</label>
+                        <input type="text" name="exercise_title[]" required style="width: 100%;">
+                        <label>Description:</label>
+                        <textarea name="exercise_description[]" style="width: 100%;" rows="2"></textarea>
+                        <label>Reps:</label>
+                        <input type="number" name="exercise_reps[]" min="0" style="width: 100%;">
+                        <label>Time (seconds):</label>
+                        <input type="number" name="exercise_time[]" min="0" style="width: 100%;">
+                    </div>
                 </div>
-                <button type="button">Add Another Exercise</button>
+                <button type="button" onclick="addExerciseBlock()">Add Another Exercise</button>
             </fieldset>
             <button type="submit" name="add_exercise">Add Exercises</button>
         </form>
@@ -246,7 +257,7 @@ $exercises = $conn->query("
                             <td><?= htmlspecialchars($ex['time_seconds']) ?></td>
                             <td>
                                 <a href="#">Edit</a>
-                                <a href="#" onclick="return confirm('Delete this workout?')">Delete</a>
+                                <a href="add_program.php?delete_id=<?= $ex['id'] ?>" onclick="return confirm('Delete this workout?')">Delete</a>
                             </td>
                         </tr>
                     <?php endforeach; ?>
@@ -256,4 +267,25 @@ $exercises = $conn->query("
       </div>
     <?php include '../Include/footer.php'; ?>
 </body>
+<script>
+    // Izveido jaunu vingrinājuma bloku formā
+    function addExerciseBlock() {
+    const section = document.getElementById('exercises-section');
+    const block = document.createElement('div');
+    block.className = 'exercise-block';
+    block.innerHTML = `
+        <label>Exercise Image:</label>
+        <input type="file" name="exercise_image[]" accept="image/*" style="margin-bottom:8px;">
+        <label>Title:</label>
+        <input type="text" name="exercise_title[]" required style="width:100%;margin-bottom:8px;">
+        <label>Description:</label>
+        <textarea name="exercise_description[]" rows="2" style="width:100%;margin-bottom:8px;"></textarea>
+        <label>Reps:</label>
+        <input type="number" name="exercise_reps[]" min="0" style="width:100%;margin-bottom:8px;">
+        <label>Time (seconds):</label>
+        <input type="number" name="exercise_time[]" min="0" style="width:100%;margin-bottom:16px;">
+    `;
+    section.appendChild(block);
+}
+</script>
 </html>
