@@ -38,7 +38,7 @@ $res = $conn->query("
             <h2>Workout Programs</h2>
             <div class="workout-program-card">
                 <?php while ($row = $res->fetch_assoc()): ?>
-                    <a href="#" class="workout-program-link"></a>
+                    <a href="exercise.php?program_id=<?= $row['id'] ?>" class="workout-program-link">
                         <?php if (!empty($workout['image'])): ?>
                                 <img src="../uploads/<?= htmlspecialchars($workout['image']) ?>" class="workout-program-image">
                         <?php endif; ?>

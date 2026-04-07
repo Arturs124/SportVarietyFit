@@ -1,13 +1,10 @@
 <?php
 require_once '../Profile/db.php';
 
+$program_id = isset($_GET['program_id']) ? (int)$_GET['program_id'] : 0;
 // treniņu dati
-$exercises = $conn->query("SELECT * FROM exercises WHERE workout_program_id");
-if ($exercises) {
-    $exercises = $exercises->fetch_all(MYSQLI_ASSOC);
-} else {
-    $exercises = [];
-}
+$result = $conn->query("SELECT * FROM exercises WHERE workout_program_id = $program_id ORDER BY id ASC");
+$exercises = $result ? $result->fetch_all(MYSQLI_ASSOC) : [];
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -19,7 +16,7 @@ if ($exercises) {
 </head>
 <body>
     <?php include '../Include/header.php'; ?>
-    <div class="exercise-container">
+    <div class="exercise-container" id="stepper">
         <div class="workout-section">
             <div class="workout-title">
                 Exercises (<?= count($exercises) ?>) | Sets: <?= $exercises ? $exercises[0]['sets'] : 1 ?>
@@ -51,4 +48,74 @@ if ($exercises) {
     </div>
     <?php include '../Include/footer.php'; ?>
 </body>
+<script>
+const exercises = <?= json_encode($exercises) ?>;
+let current = 0;
+let currentSet = 1;
+let sets = <?= $exercises ? (int)$exercises[0]['sets'] : 1 ?>;
+let timerInterval = null;
+
+function renderExercise() {
+    const stepper = document.getElementById('stepper');
+    if (!exercises.length) {
+        stepper.innerHTML = "<p>No exercises found.</p>";
+        return;
+    }
+    if (current >= exercises.length) {
+        stepper.innerHTML = `
+            <h2>Workout Complete!</h2>
+            <button class="next-btn" onclick="startWorkout()">Restart</button>`;
+        return;
+    }
+    const ex = exercises[current];
+    stepper.innerHTML = `
+        <div>Exercise ${current + 1} of ${exercises.length}</div>
+        ${ex.image ? `<img src="../uploads/${ex.image}" style="max-width:300px;border-radius:10px;">` : ''}
+        <h2>${ex.title}</h2>
+        <p>${ex.description ? ex.description.replace(/\n/g, '<br>') : ''}</p>
+        <p>
+            ${ex.reps ? ex.reps + ' reps' : ''}
+            ${ex.time_seconds ? ' | ' + ex.time_seconds + ' sec' : ''}
+        </p>
+        <button class="next-btn" onclick="nextExercise()">Next</button>`;
+}
+function nextExercise() {
+    clearInterval(timerInterval);
+    if (current < exercises.length - 1) {
+        restBetweenExercises();
+    } else {
+        if (currentSet < sets) {
+            restBetweenSets();
+        } else {
+            current++;
+            renderExercise();
+        }
+    }
+}
+
+function restBetweenExercises() {
+    let time = 30;
+    const stepper = document.getElementById('stepper');
+    stepper.innerHTML = `
+        <h2>Rest</h2>
+        <p>Next exercise in</p>
+        <div id="timer">30</div>
+        <button onclick="skipRest()">Skip</button>`;
+    const timer = document.getElementById('timer');
+    timerInterval = setInterval(() => {
+        time--;
+        timer.textContent = time;
+        if (time <= 0) {
+            clearInterval(timerInterval);
+            current++;
+            renderExercise();
+        }
+    }, 1000);
+}
+function startWorkout() {
+    current = 0;
+    renderExercise();
+}
+startWorkout();
+</script>
 </html>
