@@ -65,6 +65,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['add_program'])) {
 // Pievieno vingrinājumus treniņa programmai
 if (isset($_POST['add_exercise'])) {
     $program_id = (int) $_POST['workout_programs_id'];
+    $sets = (int) $_POST['sets'];
     $titles = $_POST['exercise_title'];
     $descriptions = $_POST['exercise_description'];
     $reps = $_POST['exercise_reps'];
@@ -80,9 +81,9 @@ if (isset($_POST['add_exercise'])) {
             move_uploaded_file($_FILES['exercise_image']['tmp_name'][$i], __DIR__ . "/../uploads/" . $image);}
         $stmt = $conn->prepare("
             INSERT INTO exercises 
-            (workout_program_id, image, title, description, reps, time_seconds, section) VALUES (?, ?, ?, ?, ?, ?, 'main')");
+            (workout_program_id, image, title, description, reps, time_seconds, sets, section) VALUES (?, ?, ?, ?, ?, ?, ?, 'main')");
         $stmt->bind_param(
-            "isssii",$program_id, $image, $title, $descriptions[$i], $reps[$i], $times[$i]);
+            "isssiii",$program_id, $image, $title, $descriptions[$i], $reps[$i], $times[$i], $sets);
         $stmt->execute();
     }
     header("Location: " . $_SERVER['REQUEST_URI']);
@@ -102,6 +103,25 @@ if (isset($_GET['delete_id'])) {
     header("Location: add_program.php");
     exit;
 }
+// Rediģēt vingrinājumu
+if (isset($_POST['update_exercise'])) {
+    $id = (int)$_POST['exercise_id'];
+    $title = $_POST['title'];
+    $description = $_POST['description'];
+    $sets = (int)$_POST['sets'];
+    $reps = (int)$_POST['reps'];
+    $time = (int)$_POST['time_seconds'];
+
+    $stmt = $conn->prepare("
+        UPDATE exercises 
+        SET title=?, description=?, sets=?, reps=?, time_seconds=? 
+        WHERE id=?");
+    $stmt->bind_param("ssiiii", $title, $description, $sets, $reps, $time, $id);
+    $stmt->execute();
+    header("Location: add_program.php");
+    exit;
+}
+$edit_id = isset($_GET['edit_id']) ? (int)$_GET['edit_id'] : 0;
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -187,6 +207,8 @@ if (isset($_GET['delete_id'])) {
             </select>
             <!-- vingrinājuma pievienošana -->
             <fieldset>
+                <label>Number of Sets:</label>
+                <input type="number" name="sets" min="1" value="1" required style="width: 100%;">
                 <div id="exercises-section">
                     <div class="exercise-block">
                         <label>Exercise Image:</label>
@@ -238,6 +260,7 @@ if (isset($_GET['delete_id'])) {
                         <th>Image</th>
                         <th>Title</th>
                         <th>Description</th>
+                        <th>Sets</th>
                         <th>Reps</th>
                         <th>Time (seconds)</th>
                         <th>Actions</th>
@@ -245,21 +268,45 @@ if (isset($_GET['delete_id'])) {
                 </thead>
                 <tbody>
                     <?php foreach ($exercises as $ex): ?>
-                        <tr>
-                            <td>
-                                <?php if ($ex['image']): ?>
-                                    <img src="../uploads/<?=  htmlspecialchars($ex['image']) ?>">
-                                <?php endif; ?>
-                            </td>
-                            <td><?= htmlspecialchars($ex['title']) ?></td>
-                            <td><?= htmlspecialchars($ex['description']) ?></td>
-                            <td><?= htmlspecialchars($ex['reps']) ?></td>
-                            <td><?= htmlspecialchars($ex['time_seconds']) ?></td>
-                            <td>
-                                <a href="#">Edit</a>
-                                <a href="add_program.php?delete_id=<?= $ex['id'] ?>" onclick="return confirm('Delete this workout?')">Delete</a>
-                            </td>
-                        </tr>
+                        <?php if ($edit_id === (int)$ex['id']): ?>
+                            <!-- Rediģēšana -->
+                            <tr>
+                                <form method="post">
+                                    <input type="hidden" name="exercise_id" value="<?= $ex['id'] ?>">
+                                    <td>
+                                        <?php if ($ex['image']): ?>
+                                            <img src="../uploads/<?= htmlspecialchars($ex['image']) ?>">
+                                        <?php endif; ?>
+                                    </td>
+                                    <td><input type="text" name="title" value="<?= htmlspecialchars($ex['title']) ?>"></td>
+                                    <td><textarea name="description"><?= htmlspecialchars($ex['description']) ?></textarea></td>
+                                    <td><input type="number" name="sets" value="<?= $ex['sets'] ?>" min="1"></td>
+                                    <td><input type="number" name="reps" value="<?= $ex['reps'] ?>"></td>
+                                    <td><input type="number" name="time_seconds" value="<?= $ex['time_seconds'] ?>"></td>
+                                    <td>
+                                        <button type="submit" name="update_exercise">Save</button><a href="add_program.php">Cancel</a>
+                                    </td>
+                                </form>
+                            </tr>
+                        <?php else: ?>
+                            <!-- Parastais skats -->
+                            <tr>
+                                <td>
+                                    <?php if ($ex['image']): ?>
+                                        <img src="../uploads/<?= htmlspecialchars($ex['image']) ?>">
+                                    <?php endif; ?>
+                                </td>
+                                <td><?= htmlspecialchars($ex['title']) ?></td>
+                                <td><?= htmlspecialchars($ex['description']) ?></td>
+                                <td><?= htmlspecialchars($ex['sets']) ?></td>
+                                <td><?= htmlspecialchars($ex['reps']) ?></td>
+                                <td><?= htmlspecialchars($ex['time_seconds']) ?></td>
+                                <td>
+                                    <a href="add_program.php?edit_id=<?= $ex['id'] ?>">Edit</a>
+                                    <a href="add_program.php?delete_id=<?= $ex['id'] ?>" onclick="return confirm('Delete this workout?')">Delete</a>
+                                </td>
+                            </tr>
+                        <?php endif; ?>
                     <?php endforeach; ?>
                 </tbody>
             </Table>

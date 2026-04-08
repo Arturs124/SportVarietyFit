@@ -54,7 +54,23 @@ let current = 0;
 let currentSet = 1;
 let sets = <?= $exercises ? (int)$exercises[0]['sets'] : 1 ?>;
 let timerInterval = null;
-
+// sākuma ekrāns
+function renderPreview() {
+    const stepper = document.getElementById('stepper');
+    if (!exercises.length) {
+        stepper.innerHTML = "<p>No exercises found.</p>";
+        return;
+    }
+    let html = `
+        <div style="text-align:center;">
+            <h2>Workout Preview</h2>
+            <p>Total Exercises: ${exercises.length}</p>
+            <p>Total Sets: ${sets}</p>
+            <button class="next-btn" onclick="startWorkout()">Start Workout</button>
+        </div>`;
+    stepper.innerHTML = html;
+}
+// vingrinājuma renderēšana
 function renderExercise() {
     const stepper = document.getElementById('stepper');
     if (!exercises.length) {
@@ -64,12 +80,12 @@ function renderExercise() {
     if (current >= exercises.length) {
         stepper.innerHTML = `
             <h2>Workout Complete!</h2>
-            <button class="next-btn" onclick="startWorkout()">Restart</button>`;
+            <button class="next-btn" onclick="renderPreview()">Back to Start</button>`;
         return;
     }
     const ex = exercises[current];
     stepper.innerHTML = `
-        <div>Exercise ${current + 1} of ${exercises.length}</div>
+        <div>Set ${currentSet}/${sets} | Exercise ${current + 1}/${exercises.length}</div>
         ${ex.image ? `<img src="../uploads/${ex.image}" style="max-width:300px;border-radius:10px;">` : ''}
         <h2>${ex.title}</h2>
         <p>${ex.description ? ex.description.replace(/\n/g, '<br>') : ''}</p>
@@ -92,15 +108,15 @@ function nextExercise() {
         }
     }
 }
-
+// atpūta starp vingrinājumiem
 function restBetweenExercises() {
     let time = 30;
     const stepper = document.getElementById('stepper');
     stepper.innerHTML = `
         <h2>Rest</h2>
         <p>Next exercise in</p>
-        <div id="timer">30</div>
-        <button onclick="skipRest()">Skip</button>`;
+        <div id="timer" style="font-size: 2rem;margin: 15px 0;">30</div>
+        <button class="next-btn" onclick="skipRest()">Skip</button>`;
     const timer = document.getElementById('timer');
     timerInterval = setInterval(() => {
         time--;
@@ -112,10 +128,49 @@ function restBetweenExercises() {
         }
     }, 1000);
 }
-function startWorkout() {
+// atpūta starp setiem
+function restBetweenSets() {
+    let time = 60;
+    const stepper = document.getElementById('stepper');
+    stepper.innerHTML = `
+        <div style="text-align:center;">
+            <h2>Rest Between Sets</h2>
+            <p>Next set (${currentSet + 1} / ${sets})</p>
+            <div id="timer" style="font-size:2rem;margin:15px 0;">60</div>
+            <button class="next-btn" onclick="skipSetRest()">Skip</button>
+        </div>`;
+    const timer = document.getElementById('timer');
+    timerInterval = setInterval(() => {
+        time--;
+        timer.textContent = time;
+
+        if (time <= 0) {
+            clearInterval(timerInterval);
+            currentSet++;
+            current = 0;
+            renderExercise();
+        }
+    }, 1000);
+}
+
+function skipSetRest() {
+    clearInterval(timerInterval);
+    currentSet++;
     current = 0;
     renderExercise();
 }
-startWorkout();
+
+function startWorkout() {
+    current = 0;
+    currentSet = 1;
+    renderExercise();
+}
+
+function skipRest() {
+    clearInterval(timerInterval);
+    current++;
+    renderExercise();
+}
+renderPreview();
 </script>
 </html>
