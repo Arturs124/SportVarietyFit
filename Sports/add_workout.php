@@ -143,37 +143,39 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_workout'])) {
         </form>
     </div>
 </div>
-<div class="form-container">
-    <h2>All Workouts</h2>
-    <table>
-        <thead>
-            <tr>
-                <th>Category</th>
-                <th>Title</th>
-                <th>Description</th>
-                <th>Image</th>
-                <th>Action</th>
-            </tr>
-        </thead>
-        <tbody>
-        <?php while ($row = $result->fetch_assoc()): ?>
-            <tr>
-                <td><?= htmlspecialchars($row['badge']) ?></td>
-                <td><?= htmlspecialchars($row['workout_title']) ?></td>
-                <td><?= htmlspecialchars($row['description']) ?></td>
-                <td>
-                    <?php if ($row['image']): ?>
-                        <img src="../uploads/<?= htmlspecialchars($row['image']) ?>" width="80">
-                    <?php endif; ?>
-                </td>
-                <td>
-                    <a href="add_workout.php?edit=<?= $row['id'] ?>">Edit</a>
-                    <a href="add_workout.php?delete_id=<?= $row['id'] ?>" onclick="return confirm('Delete this workout?')">Delete</a>
-                </td>
-            </tr>
-        <?php endwhile; ?>
-        </tbody>
-    </table>
+<div class="table-wrapper">
+    <h2 style="text-align: center;">All Workouts</h2>
+    <div class="table-responsive">
+        <table class="workout-table">
+            <thead>
+                <tr>
+                    <th>Category</th>
+                    <th>Title</th>
+                    <th>Description</th>
+                    <th>Image</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody>
+            <?php while ($row = $result->fetch_assoc()): ?>
+                <tr>
+                    <td><?= htmlspecialchars($row['badge']) ?></td>
+                    <td><?= htmlspecialchars($row['workout_title']) ?></td>
+                    <td><?= htmlspecialchars($row['description']) ?></td>
+                    <td>
+                        <?php if ($row['image']): ?>
+                            <img src="../uploads/<?= htmlspecialchars($row['image']) ?>" width="80">
+                        <?php endif; ?>
+                    </td>
+                    <td>
+                        <a href="add_workout.php?edit=<?= $row['id'] ?>">Edit</a>
+                        <a href="add_workout.php?delete_id=<?= $row['id'] ?>" onclick="return confirm('Delete this workout?')">Delete</a>
+                    </td>
+                </tr>
+            <?php endwhile; ?>
+            </tbody>
+        </table>
+    </div>
 </div>
 <?php include '../Include/footer.php'; ?>
 </body>

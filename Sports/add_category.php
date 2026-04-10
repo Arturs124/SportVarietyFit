@@ -107,7 +107,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['edit_category'])) {
     <h1 style="text-align: center;">Admin Panel</h1>
     <?php include '../Include/adminbar.php'; ?>
 
-    <div class="form-container" style="max-width:500px;margin:30px auto;padding:24px;background:#fff;border-radius:12px;box-shadow:0 2px 16px #0001;">
+    <div class="form-container" style="max-width:500px;margin:30px auto;padding:2px;background:#fff;border-radius:12px;box-shadow:0 2px 16px #0001;">
         <h2>Add New Sports Category</h2>
         <!-- Pievienot kategoriju -->
         <form method="post" enctype="multipart/form-data">
@@ -125,10 +125,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['edit_category'])) {
         <?php foreach ($categories as $category): ?>
             <li>
                 <img src="../uploads/<?= htmlspecialchars($category['image']) ?>">
-                <span><?= htmlspecialchars($category['badge']) ?></span>
-                <span><?= htmlspecialchars($category['card_title']) ?></span>
-                <a href="add_category.php?edit_category=<?= $category['id'] ?>" class="edit-btn">Edit</a>
-                <a href="add_category.php?delete_category=<?= $category['id'] ?>" class="delete-btn" onclick="return confirm('Are you sure you want to delete this category?');">Delete</a>
+                <span class="badge"><?= htmlspecialchars($category['badge']) ?></span>
+                <span class="title"><?= htmlspecialchars($category['card_title']) ?></span>
+                <div class="action-buttons">
+                    <a href="add_category.php?edit_category=<?= $category['id'] ?>" class="edit-btn">Edit</a>
+                    <a href="add_category.php?delete_category=<?= $category['id'] ?>" class="delete-btn" onclick="return confirm('Are you sure you want to delete this category?');">Delete</a>
+                </div>
             </li>
         <?php endforeach; ?>
         <!-- Rediģēt kategoriju -->

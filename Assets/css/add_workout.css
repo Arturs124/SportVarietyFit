@@ -1,3 +1,6 @@
+body {
+    overflow-x: hidden;
+}
 .form-container {
     max-width: 600px;
     margin: 30px auto;
@@ -50,4 +53,55 @@
     margin-top: 20px;
     cursor: pointer;
     transition: background-color 0.3s ease;
+}
+.table-responsive {
+    width: 100%;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+}
+.table-wrapper {
+    max-width: 600px;
+    margin: 30px auto;
+    padding: 0;
+}
+.workout-table {
+    min-width: 700px;
+    width: 100%;
+    border-collapse: collapse;
+    background: #f9f9f9;
+}
+.workout-table thead {
+    background: #303030;
+    color: white;
+}
+.workout-table th,
+.workout-table td {
+    padding: 12px;
+    border: 1px solid #ddd;
+    text-align: left;
+}
+.workout-table tbody tr:hover {
+    background: #f1f1f1;
+}
+.workout-table img {
+    max-width: 80px;
+    border-radius: 6px;
+}
+.workout-table a {
+    margin-right: 8px;
+    text-decoration: none;
+    font-weight: bold;
+}
+.workout-table a:first-child {
+    color: #007bff;
+}
+.workout-table a:last-child {
+    color: #dc3545;
+}
+@media (max-width: 768px) {
+    .form-container,
+    .table-wrapper {
+        max-width: 95%;
+        margin: 20px auto;
+    }
 }

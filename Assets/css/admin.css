@@ -1,7 +1,7 @@
 .admin-container {
     width: 75%;
     margin: 30px auto;
-    padding: 20px;
+    padding: 2px;
     background-color: #fff;
     border-radius: 10px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
@@ -33,6 +33,7 @@
 
 table {
     width: 100%;
+    min-width: 700px;
     border-collapse: collapse;
     margin: 20px 0;
     background-color: #f9f9f9;
@@ -107,7 +108,7 @@ table td .delete:hover {
 
 @media (max-width: 900px) {
     .admin-container {
-        width: 95%;
+        width: 90%;
         margin-left: 0;
         margin: 18px auto;
         padding: 18px;
@@ -188,4 +189,10 @@ table td .delete:hover {
     background: #4d0000;
     box-shadow: 0 4px 16px #0078d733;
     outline: none;
+}
+
+.table-responsive {
+    width: 100%;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
 }

@@ -55,30 +55,31 @@ $users = $stmt->get_result();
         <?php if (isset($_SESSION['success'])) { ?>
             <p class="success"><?php echo htmlspecialchars($_SESSION['success']); unset($_SESSION['success']); ?></p>
         <?php } ?>
-
-        <table>
-            <thead>
-                <tr>
-                    <th style="text-align: center;">Full Name</th>
-                    <th style="text-align: center;">Email</th>
-                    <th style="text-align: center;">Role</th>
-                    <th style="text-align: center;">Actions</th>
-                </tr>
-            </thead>
-            <tbody>
-                <?php while ($user = $users->fetch_assoc()) { ?>
+        <div class="table-responsive">
+            <table>
+                <thead>
                     <tr>
-                        <td style="text-align: center;"><?php echo htmlspecialchars($user['full_name']); ?></td>
-                        <td style="text-align: center;"><?php echo htmlspecialchars($user['email']); ?></td>
-                        <td style="text-align: center;"><?php echo htmlspecialchars($user['role']); ?></td>
-                        <td>
-                            <a href="edit_user.php?id=<?php echo $user['id']; ?>" class="action-link edit">Edit Role</a>
-                            <a href="admin.php?delete_id=<?php echo $user['id']; ?>" class="action-link delete" onclick="return confirm('Are you sure you want to delete this user?');">Delete</a>
-                        </td>
+                        <th style="text-align: center;">Full Name</th>
+                        <th style="text-align: center;">Email</th>
+                        <th style="text-align: center;">Role</th>
+                        <th style="text-align: center;">Actions</th>
                     </tr>
-                <?php } ?>
-            </tbody>
-        </table>
+                </thead>
+                <tbody>
+                    <?php while ($user = $users->fetch_assoc()) { ?>
+                        <tr>
+                            <td style="text-align: center;"><?php echo htmlspecialchars($user['full_name']); ?></td>
+                            <td style="text-align: center;"><?php echo htmlspecialchars($user['email']); ?></td>
+                            <td style="text-align: center;"><?php echo htmlspecialchars($user['role']); ?></td>
+                            <td>
+                                <a href="edit_user.php?id=<?php echo $user['id']; ?>" class="action-link edit">Edit Role</a>
+                                <a href="admin.php?delete_id=<?php echo $user['id']; ?>" class="action-link delete" onclick="return confirm('Are you sure you want to delete this user?');">Delete</a>
+                            </td>
+                        </tr>
+                    <?php } ?>
+                </tbody>
+            </table>
+        </div>
     </div>
 </div>
 <?php include '../Include/footer.php'; ?>
