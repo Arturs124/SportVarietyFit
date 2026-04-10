@@ -57,25 +57,91 @@ fieldset{
     padding: 18px;
     border-radius: 8px;
 }
+.table-wrapper {
+    width: 100%;
+    max-width: 100%;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+}
 .exercise-table {
     width: 100%;
+    min-width: 900px;
     border-collapse: collapse;
     margin-top: 20px;
-    background: #fff;
 }
 .exercise-table th,
 .exercise-table td {
     padding: 10px;
     border: 1px solid #ddd;
     text-align: center;
+    white-space: nowrap;
 }
+
 .exercise-table th {
     background: #050505;
     color: #fff;
 }
+
 .exercise-table img {
-    width: 80px;
-    height: 60px;
+    width: 70px;
+    height: 55px;
     object-fit: cover;
     border-radius: 4px;
+}
+.exercise-manager {
+    max-width: 1000px;
+    margin: 30px auto;
+    padding: 30px;
+    background: #fff;
+    border-radius: 12px;
+    box-shadow: 0 2px 16px rgba(0,0,0,0.1);
+    font-family: 'Segoe UI', sans-serif;
+    width: 100%;
+    box-sizing: border-box;
+}
+.exercise-manager h2 {
+    text-align: center;
+    margin-bottom: 20px;
+    color: #333;
+}
+.exercise-manager label {
+    display: block;
+    margin: 15px 0 5px;
+    font-weight: 600;
+    color: #444;
+}
+.exercise-manager input,
+.exercise-manager select,
+.exercise-manager textarea {
+    width: 100%;
+    padding: 10px 12px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    box-sizing: border-box;
+}
+.exercise-manager button {
+    width: 100%;
+    padding: 12px;
+    margin-top: 20px;
+    background: #a71d2a;
+    color: #fff;
+    border: none;
+    border-radius: 6px;
+    font-weight: bold;
+}
+@media (max-width: 600px) {
+    .exercise-manager {
+        padding: 15px;
+        margin: 15px auto;
+    }
+
+    .exercise-table {
+        min-width: 850px;
+    }
+
+    .exercise-table th,
+    .exercise-table td {
+        font-size: 0.85rem;
+        padding: 8px;
+    }
 }
