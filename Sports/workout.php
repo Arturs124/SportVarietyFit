@@ -7,14 +7,17 @@ $stmt->bind_param("i", $workout_id);
 $stmt->execute();
 $workout = $stmt->get_result()->fetch_assoc();
 // workout programma
-$res = $conn->query("
+$res = $conn->prepare("
     SELECT wp.*, sc.badge, w.workout_title
     FROM workout_programs wp
     JOIN sports_categories sc ON wp.sports_category_id = sc.id
     JOIN workouts w ON wp.workout_type_id = w.id
-    WHERE wp.workout_type_id
+    WHERE wp.workout_type_id = ?
     ORDER BY wp.id DESC
 ");
+$res->bind_param("i", $workout_id);
+$res->execute();
+$res = $res->get_result();
 ?>
 <!DOCTYPE html>
 <html lang="en">

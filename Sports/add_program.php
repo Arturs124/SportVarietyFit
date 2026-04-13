@@ -142,18 +142,18 @@ $edit_id = isset($_GET['edit_id']) ? (int)$_GET['edit_id'] : 0;
         <h2>Add Workout Program</h2>
         <form method="post">
             <label>Sports Category</label>
-            <select name="sports_category_id" required>
+            <select id="program_sport" name="sports_category_id" required>
                 <option value="">Select Sport</option>
                 <?php foreach ($categories as $category): ?>
-                    <option value="<?= $category['id'] ?>"><?= htmlspecialchars($category['badge']) ?></option>
+                    <option value="<?= $category['id'] ?>">
+                        <?= htmlspecialchars($category['badge']) ?>
+                    </option>
                 <?php endforeach; ?>
             </select>
+
             <label>Workout Type:</label>
-            <select name="workout_type_id" required>
-                <option value="">Select Type</option>
-                <?php foreach ($workout_types as $type): ?>
-                    <option value="<?= $type['id'] ?>"><?= htmlspecialchars($type['workout_title']) ?></option>
-                <?php endforeach; ?>
+            <select id="program_type" name="workout_type_id" required>
+                <option value="">Select Sport First</option>
             </select>
             <label>Image:</label>
             <input type="file" name="image" accept="image/*" required>
@@ -185,25 +185,23 @@ $edit_id = isset($_GET['edit_id']) ? (int)$_GET['edit_id'] : 0;
         <h2>Add Exercises</h2>
         <form method="post" enctype="multipart/form-data">
             <label>Sports Category</label>
-            <select name="sports_category_id" required>
+            <select id="ex_sport" name="sports_category_id" required>
                 <option value="">Select Sport</option>
                 <?php foreach ($categories as $category): ?>
-                    <option value="<?= $category['id'] ?>"><?= htmlspecialchars($category['badge']) ?></option>
+                    <option value="<?= $category['id'] ?>">
+                        <?= htmlspecialchars($category['badge']) ?>
+                    </option>
                 <?php endforeach; ?>
             </select>
+
             <label>Workout Type:</label>
-            <select name="workout_type_id" required>
-                <option value="">Select Type</option>
-                <?php foreach ($workout_types as $type): ?>
-                    <option value="<?= $type['id'] ?>"><?= htmlspecialchars($type['workout_title']) ?></option>
-                <?php endforeach; ?>
+            <select id="ex_type" name="workout_type_id" required>
+                <option value="">Select Sport First</option>
             </select>
+
             <label>Workout Program:</label>
-            <select name="workout_programs_id" required>
-                <option value="">Select Program</option>
-                <?php foreach ($workout_programs as $program): ?>
-                    <option value="<?= $program['id'] ?>"><?= htmlspecialchars($program['title']) ?></option>
-                <?php endforeach; ?>
+            <select id="ex_program" name="workout_programs_id" required>
+                <option value="">Select Type First</option>
             </select>
             <!-- vingrinājuma pievienošana -->
             <fieldset>
@@ -233,29 +231,25 @@ $edit_id = isset($_GET['edit_id']) ? (int)$_GET['edit_id'] : 0;
         <h2>Manage Exercises</h2>
         <form method="post">
             <label>Sports Category</label>
-            <select name="sports_category_id" required>
+            <select id="sports_category" name="sports_category_id" required>
                 <option value="">Select Sport</option>
                 <?php foreach ($categories as $category): ?>
-                    <option value="<?= $category['id'] ?>"><?= htmlspecialchars($category['badge']) ?></option>
+                    <option value="<?= $category['id'] ?>">
+                        <?= htmlspecialchars($category['badge']) ?>
+                    </option>
                 <?php endforeach; ?>
             </select>
-            <label>Workout Type:</label>
-            <select name="workout_type_id" required>
+            <label>Workout Type</label>
+            <select id="workout_type" name="workout_type_id">
                 <option value="">Select Type</option>
-                <?php foreach ($workout_types as $type): ?>
-                    <option value="<?= $type['id'] ?>"><?= htmlspecialchars($type['workout_title']) ?></option>
-                <?php endforeach; ?>
             </select>
-            <label>Workout Program:</label>
-            <select name="workout_programs_id" required>
+            <label>Workout Program</label>
+            <select id="workout_program" name="workout_programs_id">
                 <option value="">Select Program</option>
-                <?php foreach ($workout_programs as $program): ?>
-                    <option value="<?= $program['id'] ?>"><?= htmlspecialchars($program['title']) ?></option>
-                <?php endforeach; ?>
             </select>
             <h3>Existing Exercises</h3>
             <div class="table-wrapper">
-                <Table class="exercise-table">
+                <table class="exercise-table">
                     <thead>
                         <tr>
                             <th>Image</th>
@@ -267,60 +261,36 @@ $edit_id = isset($_GET['edit_id']) ? (int)$_GET['edit_id'] : 0;
                             <th>Actions</th>
                         </tr>
                     </thead>
-                    <tbody>
-                        <?php foreach ($exercises as $ex): ?>
-                            <?php if ($edit_id === (int)$ex['id']): ?>
-                                <!-- Rediģēšana -->
-                                <tr>
-                                    <form method="post">
-                                        <input type="hidden" name="exercise_id" value="<?= $ex['id'] ?>">
-                                        <td>
-                                            <?php if ($ex['image']): ?>
-                                                <img src="../uploads/<?= htmlspecialchars($ex['image']) ?>">
-                                            <?php endif; ?>
-                                        </td>
-                                        <td><input type="text" name="title" value="<?= htmlspecialchars($ex['title']) ?>"></td>
-                                        <td><textarea name="description"><?= htmlspecialchars($ex['description']) ?></textarea></td>
-                                        <td><input type="number" name="sets" value="<?= $ex['sets'] ?>" min="1"></td>
-                                        <td><input type="number" name="reps" value="<?= $ex['reps'] ?>"></td>
-                                        <td><input type="number" name="time_seconds" value="<?= $ex['time_seconds'] ?>"></td>
-                                        <td>
-                                            <button type="submit" name="update_exercise">Save</button><a href="add_program.php">Cancel</a>
-                                        </td>
-                                    </form>
-                                </tr>
-                            <?php else: ?>
-                                <!-- Parastais skats -->
-                                <tr>
-                                    <td>
-                                        <?php if ($ex['image']): ?>
-                                            <img src="../uploads/<?= htmlspecialchars($ex['image']) ?>">
-                                        <?php endif; ?>
-                                    </td>
-                                    <td><?= htmlspecialchars($ex['title']) ?></td>
-                                    <td><?= htmlspecialchars($ex['description']) ?></td>
-                                    <td><?= htmlspecialchars($ex['sets']) ?></td>
-                                    <td><?= htmlspecialchars($ex['reps']) ?></td>
-                                    <td><?= htmlspecialchars($ex['time_seconds']) ?></td>
-                                    <td>
-                                        <a href="add_program.php?edit_id=<?= $ex['id'] ?>">Edit</a>
-                                        <a href="add_program.php?delete_id=<?= $ex['id'] ?>" onclick="return confirm('Delete this workout?')">Delete</a>
-                                    </td>
-                                </tr>
-                            <?php endif; ?>
-                        <?php endforeach; ?>
+                    <tbody id="exercise-body">
+                        <tr id="empty-state">
+                            <td colspan="7" style="text-align:center; padding:20px; color:#888;">
+                                Please select Sports Category → Workout Type → Workout Program
+                            </td>
+                        </tr>
                     </tbody>
-                </Table>
+                </table>
             </div>
         </form>
       </div>
     <?php include '../Include/footer.php'; ?>
 </body>
 <script>
-    // Izveido jaunu vingrinājuma bloku formā
-    function addExerciseBlock() {
+const sportSelect = document.getElementById("sports_category");
+const typeSelect = document.getElementById("workout_type");
+const programSelect = document.getElementById("workout_program");
+const tbody = document.getElementById("exercise-body");
+const editId = new URLSearchParams(window.location.search).get("edit_id");
+const programSport = document.getElementById("program_sport");
+const programType = document.getElementById("program_type");
+const exSport = document.getElementById("ex_sport");
+const exType = document.getElementById("ex_type");
+const exProgram = document.getElementById("ex_program");
+
+// add exercise formai - pievieno jaunu vingrinājuma bloku
+function addExerciseBlock() {
     const section = document.getElementById('exercises-section');
     const block = document.createElement('div');
+
     block.className = 'exercise-block';
     block.innerHTML = `
         <label>Exercise Image:</label>
@@ -336,5 +306,214 @@ $edit_id = isset($_GET['edit_id']) ? (int)$_GET['edit_id'] : 0;
     `;
     section.appendChild(block);
 }
+exSport.addEventListener("change", function () {
+    const sportId = this.value;
+
+    exType.innerHTML = `<option value="">Loading...</option>`;
+    exProgram.innerHTML = `<option value="">Select Type First</option>`;
+
+    if (!sportId) {
+        exType.innerHTML = `<option value="">Select Sport First</option>`;
+        return;
+    }
+
+    fetch(`../Sports/get_workout_types.php?sports_category_id=${sportId}`)
+        .then(res => res.json())
+        .then(data => {
+            exType.innerHTML = `<option value="">Select Type</option>`;
+
+            if (!data.length) {
+                exType.innerHTML = `<option value="">No types available</option>`;
+                return;
+            }
+
+            data.forEach(type => {
+                exType.innerHTML += `
+                    <option value="${type.id}">
+                        ${type.workout_title}
+                    </option>
+                `;
+            });
+        });
+});
+exType.addEventListener("change", function () {
+    const sportId = exSport.value;
+    const typeId = this.value;
+    exProgram.innerHTML = `<option value="">Loading...</option>`;
+    if (!typeId) {
+        exProgram.innerHTML = `<option value="">Select Type First</option>`;
+        return;
+    }
+    fetch(`../Sports/get_programs.php?sports_category_id=${sportId}&workout_type_id=${typeId}`)
+        .then(res => res.json())
+        .then(data => {
+            exProgram.innerHTML = `<option value="">Select Program</option>`;
+            if (!data.length) {
+                exProgram.innerHTML = `<option value="">No programs available</option>`;
+                return;
+            }
+            data.forEach(program => {
+                exProgram.innerHTML += `
+                    <option value="${program.id}">
+                        ${program.title}
+                    </option>
+                `;
+            });
+        });
+});
+
+
+function loadExercises(programId) {
+    const editId = new URLSearchParams(window.location.search).get("edit_id");
+    if (!programId) {
+        tbody.innerHTML = `
+            <tr>
+                <td colspan="7" style="text-align:center; padding:20px; color:#888;">Please select Sports Category → Workout Type → Workout Program</td>
+            </tr>
+        `;
+        return;
+    }
+    fetch(`../Sports/get_exercises.php?program_id=${programId}`)
+        .then(res => res.json())
+        .then(data => {
+            if (!data.length) {
+                tbody.innerHTML = `
+                    <tr>
+                        <td colspan="7" style="text-align:center; padding:20px; color:#888;">No exercises found</td>
+                    </tr>
+                `;
+                return;
+            }
+            tbody.innerHTML = "";
+            data.forEach(ex => {
+                if (editId && editId == ex.id) {
+                    tbody.innerHTML += `
+                        <tr>
+                            <form method="post">
+                                <input type="hidden" name="exercise_id" value="${ex.id}">                           
+                                <td>${ex.image ? `<img src="../uploads/${ex.image}">` : ""}</td>
+                                <td><input type="text" name="title" value="${ex.title}"></td>                                
+                                <td><textarea name="description">${ex.description ?? ""}</textarea></td>                                
+                                <td><input type="number" name="sets" value="${ex.sets}"></td>                                
+                                <td><input type="number" name="reps" value="${ex.reps}"></td>                               
+                                <td><input type="number" name="time_seconds" value="${ex.time_seconds}"></td>                               
+                                <td>
+                                    <button type="submit" name="update_exercise">Save</button>
+                                    <a href="#" onclick="cancelEdit()">Cancel</a>
+                                </td>
+                            </form>
+                        </tr>
+                    `;
+                } else {
+                    tbody.innerHTML += `
+                        <tr>
+                            <td>${ex.image ? `<img src="../uploads/${ex.image}">` : ""}</td>
+                            <td>${ex.title}</td>
+                            <td>${ex.description ?? ""}</td>
+                            <td>${ex.sets}</td>
+                            <td>${ex.reps}</td>
+                            <td>${ex.time_seconds}</td>
+                            <td>
+                                <a href="#" onclick="editExercise(${ex.id})">Edit</a>
+                                <a href="add_program.php?delete_id=${ex.id}" onclick="return confirm('Delete?')">Delete</a>
+                            </td>
+                        </tr>
+                    `;
+                }
+            });
+        });
+}
+// rediģēt vingrinājumu
+function editExercise(id) {
+    const url = new URL(window.location.href);
+    url.searchParams.set("edit_id", id);
+    window.history.pushState({}, "", url);
+    const programId = programSelect.value;
+    if (programId) {
+        loadExercises(programId);
+    }
+}
+// atcelt rediģēšanu
+function cancelEdit() {
+    const url = new URL(window.location.href);
+    url.searchParams.delete("edit_id");
+    window.history.pushState({}, "", url);
+    const programId = programSelect.value;
+    if (programId) {
+        loadExercises(programId);
+    }
+}
+// galvenās izvēlnes - sporta kategorijas izvēle
+sportSelect.addEventListener("change", function () {
+    const sportId = this.value;
+    typeSelect.innerHTML = `<option value="">Loading...</option>`;
+    programSelect.innerHTML = `<option value="">Select Program</option>`;
+    if (!sportId) {
+        typeSelect.innerHTML = `<option value="">Select Type</option>`;
+        return;
+    }
+    fetch(`../Sports/get_workout_types.php?sports_category_id=${sportId}`)
+        .then(res => res.json())
+        .then(data => {
+            typeSelect.innerHTML = `<option value="">Select Type</option>`;
+            if (!data.length) {
+                typeSelect.innerHTML = `<option value="">No types available</option>`;
+                return;
+            }
+            data.forEach(item => {
+                typeSelect.innerHTML += `<option value="${item.id}">${item.workout_title}</option>`;
+            });
+        });
+});
+// galvenās izvēlnes - treniņu veida izvēle
+typeSelect.addEventListener("change", function () {
+    const sportId = sportSelect.value;
+    const typeId = this.value;
+    programSelect.innerHTML = `<option value="">Loading...</option>`;
+    if (!typeId) {
+        programSelect.innerHTML = `<option value="">Select Program</option>`;
+        return;
+    }
+    fetch(`../Sports/get_programs.php?sports_category_id=${sportId}&workout_type_id=${typeId}`)
+        .then(res => res.json())
+        .then(data => {
+            programSelect.innerHTML = `<option value="">Select Program</option>`;
+            if (!data.length) {
+                programSelect.innerHTML = `<option value="">No programs available</option>`;
+                return;
+            }
+            data.forEach(item => {
+                programSelect.innerHTML += `<option value="${item.id}">${item.title}</option>`;
+            });
+        });
+});
+programSelect.addEventListener("change", function () {
+    loadExercises(this.value);
+});
+// add workout program formai
+programSport.addEventListener("change", function () {
+    const sportId = this.value;
+    programType.innerHTML = `<option value="">Loading...</option>`;
+    if (!sportId) {
+        programType.innerHTML = `<option value="">Select Sport First</option>`;
+        return;
+    }
+    fetch(`../Sports/get_workout_types.php?sports_category_id=${sportId}`)
+        .then(res => res.json())
+        .then(data => {
+            programType.innerHTML = `<option value="">Select Type</option>`;
+            if (!data.length) {
+                programType.innerHTML = `<option value="">No types available</option>`;
+                return;
+            }
+            data.forEach(type => {
+                programType.innerHTML += `
+                    <option value="${type.id}">
+                        ${type.workout_title}
+                    </option>
+                `;
+            });
+        });
+});
 </script>
 </html>
