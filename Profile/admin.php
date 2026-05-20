@@ -6,27 +6,36 @@ if (!isset($_SESSION['user_id']) || $_SESSION['role'] !== 'admin') {
     header("Location: /SportVarietyFit/index.php");
     exit();
 }
+// Dzēš lietotāju no db
 if (isset($_GET['delete_id'])) {
-    $delete_id = $_GET['delete_id'];
-    if ($delete_id == $_SESSION['user_id']) {
-        $_SESSION['error'] = "You cannot delete your own account!";
-        header("Location: admin.php");
-        exit();
-    }
-    // Dzēš lietotāju no db
-    $delete_sql = "DELETE FROM users WHERE id = ?";
-    $delete_stmt = $conn->prepare($delete_sql);
-    $delete_stmt->bind_param("i", $delete_id);
-    if ($delete_stmt->execute()) {
-        $_SESSION['success'] = "User deleted successfully!";
-    } else {
-        $_SESSION['error'] = "Failed to delete user.";
-    }
+    $id = (int) $_GET['delete_id'];
+    $stmt = $conn->prepare("DELETE FROM users WHERE id = ?"); // sagatavo SQL vaicājumu, lai dzēstu lietotāju pēc ID
+    $stmt->bind_param("i", $id); // ievieto ID vaicājumā
+    $success = $stmt->execute(); // izpilda vaicājumu un saglabā rezultātu
+    $_SESSION['success'] = $success ? "User deleted successfully!" : "Failed to delete user."; // Izvada paziņojumu
     header("Location: admin.php");
     exit();
 }
-$sql = "SELECT id, full_name, email, role FROM users WHERE role != 'admin'";
+$sql = "SELECT id, full_name, email, role FROM users WHERE role != 'admin'"; // Iegūst visus lietotājus, izņemot adminus
 $stmt = $conn->prepare($sql);
+$stmt->execute();
+$users = $stmt->get_result();
+
+$search = $_GET['search'] ?? '';
+// meklē lietotājus
+if ($search) {
+    $sql = "SELECT id, full_name, email, role FROM users 
+            WHERE role != 'admin'
+            AND (full_name LIKE ? OR email LIKE ?)";
+    $stmt = $conn->prepare($sql);
+    $like = "%$search%";
+    $stmt->bind_param("ss", $like, $like);
+} else {
+    $sql = "SELECT id, full_name, email, role FROM users 
+            WHERE role != 'admin'";
+    
+    $stmt = $conn->prepare($sql);
+}
 $stmt->execute();
 $users = $stmt->get_result();
 ?>
@@ -55,6 +64,10 @@ $users = $stmt->get_result();
         <?php if (isset($_SESSION['success'])) { ?>
             <p class="success"><?php echo htmlspecialchars($_SESSION['success']); unset($_SESSION['success']); ?></p>
         <?php } ?>
+        <form method="GET" style="text-align:center; margin-bottom: 20px;">
+            <input type="text" name="search" placeholder="Search by name or email" value="<?php echo isset($_GET['search']) ? htmlspecialchars($_GET['search']) : ''; ?>">
+            <button type="submit">Search</button>
+        </form>
         <div class="table-responsive">
             <table>
                 <thead>

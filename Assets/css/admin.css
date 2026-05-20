@@ -196,3 +196,34 @@ table td .delete:hover {
     overflow-x: auto;
     -webkit-overflow-scrolling: touch;
 }
+/* search bar */
+form {
+    text-align: center;
+    margin: 20px 0;
+}
+form input[type="text"] {
+    padding: 10px 12px;
+    width: 260px;
+    max-width: 90%;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    outline: none;
+    transition: 0.2s;
+}
+form input[type="text"]:focus {
+    border-color: #770000;
+    box-shadow: 0 0 5px rgba(76, 175, 80, 0.3);
+}
+form button {
+    padding: 10px 15px;
+    margin-left: 5px;
+    border: none;
+    border-radius: 6px;
+    background-color: #700000;
+    color: white;
+    cursor: pointer;
+    transition: 0.2s;
+}
+form button:hover {
+    background-color: #45a049;
+}

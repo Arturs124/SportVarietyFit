@@ -11,30 +11,21 @@ if (!isset($_GET['id'])) {
     header("Location: admin.php");
     exit();
 }
-
-$user_id = $_GET['id'];
-
-$sql = "SELECT id, full_name, email, role FROM users WHERE id = ?";
-$stmt = $conn->prepare($sql);
-$stmt->bind_param("i", $user_id);
+// Lietotāja datu iegūšana no db
+$user_id = (int) $_GET['id'];// iegūst lietotāja ID no URL
+$stmt = $conn->prepare("SELECT id, full_name, email, role FROM users WHERE id = ?");// sagatavo SQL, lai atrastu lietotāju pēc id
+$stmt->bind_param("i", $user_id);// ievieto id vaicājumā
 $stmt->execute();
-$result = $stmt->get_result();
-
-if ($result->num_rows === 0) {
+$user = $stmt->get_result()->fetch_assoc();// iegūst lietotāja datus
+if (!$user) {
     header("Location: admin.php");
     exit();
 }
-
-$user = $result->fetch_assoc();
-
-if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-    $new_role = $_POST['role'];
-    
-    $update_sql = "UPDATE users SET role = ? WHERE id = ?";
-    $update_stmt = $conn->prepare($update_sql);
-    $update_stmt->bind_param("si", $new_role, $user_id);
-    $update_stmt->execute();
-
+//Lietotāja lomas maiņa
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    $stmt = $conn->prepare("UPDATE users SET role = ? WHERE id = ?"); // sagatavo SQL, lai mainītu lietotāja lomu
+    $stmt->bind_param("si", $_POST['role'], $user_id); // ieliek jauno lomu un lietotāja id
+    $stmt->execute();
     header("Location: admin.php?success=Role updated successfully");
     exit();
 }
