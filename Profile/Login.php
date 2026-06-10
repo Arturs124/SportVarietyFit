@@ -27,16 +27,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $_SESSION['error'] = "User not found!";
         }
     }
-    // atjaunina paroli
-    if (isset($_POST['reset_password'])) {
-        $email = $_POST['email'];
-        $new_password = password_hash($_POST['new_password'], PASSWORD_DEFAULT); // jaunā parole tiek hashota
-        $stmt = $conn->prepare("UPDATE users SET password = ? WHERE email = ?"); // parole tiek atjaunināta datubāzē
-        $stmt->bind_param("ss", $new_password, $email); // ievieto jauno hashoto paroli un e-pastu
-        if ($stmt->execute()) {
-            $_SESSION['success'] = "Password updated!";
-        }
-    }
     header("Location: login.php");
     exit();
 }

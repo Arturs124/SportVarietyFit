@@ -16,26 +16,11 @@ if (isset($_GET['delete_id'])) {
     header("Location: admin.php");
     exit();
 }
-$sql = "SELECT id, full_name, email, role FROM users WHERE role != 'admin'"; // Iegūst visus lietotājus, izņemot adminus
+// Iegūst visus lietotājus, ieskaitot adminus, bet ne pašreizējo adminu
+$sql = "SELECT id, full_name, email, role FROM users WHERE id != ?";
 $stmt = $conn->prepare($sql);
-$stmt->execute();
-$users = $stmt->get_result();
-
-$search = $_GET['search'] ?? '';
-// meklē lietotājus
-if ($search) {
-    $sql = "SELECT id, full_name, email, role FROM users 
-            WHERE role != 'admin'
-            AND (full_name LIKE ? OR email LIKE ?)";
-    $stmt = $conn->prepare($sql);
-    $like = "%$search%";
-    $stmt->bind_param("ss", $like, $like);
-} else {
-    $sql = "SELECT id, full_name, email, role FROM users 
-            WHERE role != 'admin'";
-    
-    $stmt = $conn->prepare($sql);
-}
+$currentAdminId = $_SESSION['user_id'];
+$stmt->bind_param("i", $currentAdminId);
 $stmt->execute();
 $users = $stmt->get_result();
 ?>
